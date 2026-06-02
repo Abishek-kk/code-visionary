@@ -2,7 +2,15 @@ export type VisualizerType =
   | "array"
   | "twoPointer"
   | "slidingWindow"
-  | "stack";
+  | "stack"
+  | "binarySearch"
+  | "bfs"
+  | "dfs"
+  | "recursion"
+  | "dp"
+  | "linkedList"
+  | "heap"
+  | "backtrack";
 
 export interface Pointer {
   name: string;
@@ -20,6 +28,31 @@ export interface AlgoStep {
   stack?: (number | string)[];
   result?: number | string | null;
   lineNumber?: number;
+  graph?: {
+    nodes: { id: string; label: string }[];
+    edges: { from: string; to: string }[];
+    visited?: string[];
+    queue?: string[];
+    current?: string;
+  };
+  tree?: {
+    nodes: { id: string; value: string; left?: string; right?: string }[];
+    current?: string;
+    visited?: string[];
+  };
+  dp?: {
+    table: (number | string)[][];
+    highlighted?: { row: number; col: number }[];
+    rowLabels?: string[];
+    colLabels?: string[];
+  };
+  linkedList?: {
+    nodes: { id: string; value: string; next?: string }[];
+    pointers?: { name: string; nodeId: string }[];
+  };
+  callStack?: {
+    frames: { fnName: string; args: string; returnVal?: string }[];
+  };
 }
 
 export interface AnalysisResult {

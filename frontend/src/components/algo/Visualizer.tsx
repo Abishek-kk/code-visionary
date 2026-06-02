@@ -1,6 +1,14 @@
 import { AnimatePresence, motion } from "motion/react";
 import { usePlayback } from "@/stores/playback";
 import { ArrayCanvas } from "./ArrayCanvas";
+import { StackVisualizer } from "./StackVisualizer";
+import { BinarySearchVisualizer } from "./BinarySearchVisualizer";
+import { GraphVisualizer } from "./GraphVisualizer";
+import { RecursionVisualizer } from "./RecursionVisualizer";
+import { DPVisualizer } from "./DPVisualizer";
+import { LinkedListVisualizer } from "./LinkedListVisualizer";
+import { HeapVisualizer } from "./HeapVisualizer";
+import { BacktrackVisualizer } from "./BacktrackVisualizer";
 
 export function Visualizer() {
   const analysis = usePlayback((s) => s.analysis);
@@ -23,7 +31,36 @@ export function Visualizer() {
   const step = analysis.steps[stepIndex];
   if (!step) return null;
 
-  const t = analysis.visualizerType;
+  const visualizerType = analysis.visualizerType;
+
+  const renderVisualizer = () => {
+    switch (visualizerType) {
+      case "array":
+      case "twoPointer":
+      case "slidingWindow":
+        return <ArrayCanvas step={step} showWindow={visualizerType === "slidingWindow"} />;
+      case "stack":
+        return <StackVisualizer step={step} />;
+      case "binarySearch":
+        return <BinarySearchVisualizer step={step} />;
+      case "bfs":
+      case "dfs":
+        return <GraphVisualizer step={step} visualizerType={visualizerType} />;
+      case "recursion":
+        return <RecursionVisualizer step={step} />;
+      case "dp":
+        return <DPVisualizer step={step} />;
+      case "linkedList":
+        return <LinkedListVisualizer step={step} />;
+      case "heap":
+        return <HeapVisualizer step={step} />;
+      case "backtrack":
+        return <BacktrackVisualizer step={step} />;
+      default:
+        return <ArrayCanvas step={step} />;
+    }
+  };
+
   return (
     <div className="relative flex h-full w-full overflow-hidden">
       <div className="bg-grid pointer-events-none absolute inset-0 opacity-20" aria-hidden />
@@ -36,11 +73,7 @@ export function Visualizer() {
           transition={{ duration: 0.25 }}
           className="relative flex h-full w-full"
         >
-          <ArrayCanvas
-            step={step}
-            showWindow={t === "slidingWindow"}
-            showStack={t === "stack"}
-          />
+          {renderVisualizer()}
         </motion.div>
       </AnimatePresence>
     </div>
