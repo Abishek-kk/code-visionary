@@ -30,10 +30,13 @@ const monacoLangMap: Record<LanguageId, string> = {
 
 export function CodeWorkspace() {
   const [isClient, setIsClient] = useState(false);
-  const [language, setLanguage] = useState<LanguageId>("python");
-  const [code, setCode] = useState(STARTER_CODE.python);
+  const [hydrated, setHydrated] = useState(false);
   const [url, setUrl] = useState("");
 
+  const language = usePlayback((s) => s.language);
+  const code = usePlayback((s) => s.code);
+  const setLanguage = usePlayback((s) => s.setLanguage);
+  const setCode = usePlayback((s) => s.setCode);
   const setAnalysis = usePlayback((s) => s.setAnalysis);
   const setProblem = usePlayback((s) => s.setProblem);
   const setIsAnalyzing = usePlayback((s) => s.setIsAnalyzing);
@@ -44,6 +47,24 @@ export function CodeWorkspace() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Initialize with default code if empty after hydration
+  useEffect(() => {
+    const unsubscribe = usePlayback.subscribe(
+      (state) => state.code,
+      () => {
+        setHydrated(true);
+      }
+    );
+    return unsubscribe;
+  }, []);
+
+  // Set default code for language if code is empty
+  useEffect(() => {
+    if (hydrated && !code && language) {
+      setCode(STARTER_CODE[language as LanguageId]);
+    }
+  }, [hydrated, code, language, setCode]);
 
   const analyzeMut = useMutation({
     mutationFn: (vars: { code: string; language: LanguageId }) =>
