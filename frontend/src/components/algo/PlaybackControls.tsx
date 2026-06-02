@@ -1,5 +1,7 @@
-import { useEffect } from "react";
-import { Pause, Play, SkipBack, SkipForward, RotateCcw } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Pause, Play, SkipBack, SkipForward, RotateCcw, CheckCircle } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import confetti from "canvas-confetti";
 import { usePlayback } from "@/stores/playback";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -23,18 +25,45 @@ export function PlaybackControls() {
 
   const total = analysis?.steps.length ?? 0;
   const isEnd = stepIndex >= total - 1;
+  const confettiFiredRef = useRef(false);
+  const [showCompletion, setShowCompletion] = useState(false);
 
   // playback timer
   useEffect(() => {
     if (!playing || total === 0) return;
     if (isEnd) {
       setPlaying(false);
+      // Fire confetti on completion
+      if (!confettiFiredRef.current) {
+        confettiFiredRef.current = true;
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: ["#00d4ff", "#00ff88", "#ffb800", "#ff00aa"],
+        });
+        setShowCompletion(true);
+        const timer = setTimeout(() => setShowCompletion(false), 2000);
+        return () => clearTimeout(timer);
+      }
       return;
     }
     const ms = 1000 / speed;
     const id = setTimeout(() => next(), ms);
     return () => clearTimeout(id);
   }, [playing, stepIndex, speed, total, isEnd, next, setPlaying]);
+
+  // Reset confetti flag when restarting or analysis changes
+  useEffect(() => {
+    confettiFiredRef.current = false;
+  }, [analysis]);
+
+  // Reset confetti flag when manually stepping to the end
+  useEffect(() => {
+    if (isEnd && !playing) {
+      confettiFiredRef.current = false;
+    }
+  }, [isEnd, playing]);
 
   // keyboard
   useEffect(() => {
@@ -86,8 +115,24 @@ export function PlaybackControls() {
           <SkipForward className="size-4" />
         </Button>
 
-        <div className="ml-2 font-mono text-xs text-muted-foreground">
-          Step <span className="text-[var(--neon-cyan)]">{Math.min(stepIndex + 1, Math.max(total, 1))}</span> of {Math.max(total, 1)}
+        <div className="ml-2 relative flex items-center gap-2 font-mono text-xs">
+          <span className="text-muted-foreground">
+            Step <span className="text-[var(--neon-cyan)]">{Math.min(stepIndex + 1, Math.max(total, 1))}</span> of {Math.max(total, 1)}
+          </span>
+          <AnimatePresence>
+            {showCompletion && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="flex items-center gap-1 px-2 py-1 rounded-full bg-[color-mix(in_oklab,var(--neon-green)_20%,var(--panel))] border border-[var(--neon-green)]"
+                style={{ color: "var(--neon-green)" }}
+              >
+                <CheckCircle className="size-3" />
+                <span className="text-[10px] font-bold uppercase tracking-wider">Complete!</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <div className="ml-auto flex items-center gap-1">
