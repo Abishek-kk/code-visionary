@@ -1,5 +1,5 @@
-import { useState } from "react";
-import Editor from "@monaco-editor/react";
+import { useEffect, useState } from "react";
+import Editor from "@monaco-editor/react/dist/index.mjs";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Loader2, Play, Link2 } from "lucide-react";
@@ -29,6 +29,7 @@ const monacoLangMap: Record<LanguageId, string> = {
 };
 
 export function CodeWorkspace() {
+  const [isClient, setIsClient] = useState(false);
   const [language, setLanguage] = useState<LanguageId>("python");
   const [code, setCode] = useState(STARTER_CODE.python);
   const [url, setUrl] = useState("");
@@ -38,6 +39,10 @@ export function CodeWorkspace() {
 
   const analyzeFn = useServerFn(analyzeCode);
   const fetchFn = useServerFn(fetchLeetCodeProblem);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const analyzeMut = useMutation({
     mutationFn: (vars: { code: string; language: LanguageId }) =>
@@ -130,24 +135,30 @@ export function CodeWorkspace() {
       </div>
 
       <div className="glass relative flex-1 overflow-hidden rounded-2xl">
-        <Editor
-          height="100%"
-          theme="vs-dark"
-          language={monacoLangMap[language]}
-          value={code}
-          onChange={(v) => setCode(v ?? "")}
-          options={{
-            fontFamily:
-              'JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, monospace',
-            fontSize: 13,
-            minimap: { enabled: false },
-            scrollBeyondLastLine: false,
-            smoothScrolling: true,
-            padding: { top: 12, bottom: 12 },
-            lineNumbersMinChars: 3,
-            renderLineHighlight: "all",
-          }}
-        />
+        {isClient ? (
+          <Editor
+            height="100%"
+            theme="vs-dark"
+            language={monacoLangMap[language]}
+            value={code}
+            onChange={(v) => setCode(v ?? "")}
+            options={{
+              fontFamily:
+                'JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, monospace',
+              fontSize: 13,
+              minimap: { enabled: false },
+              scrollBeyondLastLine: false,
+              smoothScrolling: true,
+              padding: { top: 12, bottom: 12 },
+              lineNumbersMinChars: 3,
+              renderLineHighlight: "all",
+            }}
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center font-mono text-xs text-muted-foreground">
+            Loading editor...
+          </div>
+        )}
       </div>
     </div>
   );
