@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Editor from "@monaco-editor/react/dist/index.mjs";
+import Editor from "@monaco-editor/react";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Loader2, Play, Link2 } from "lucide-react";
