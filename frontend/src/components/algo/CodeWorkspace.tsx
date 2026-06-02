@@ -36,6 +36,7 @@ export function CodeWorkspace() {
 
   const setAnalysis = usePlayback((s) => s.setAnalysis);
   const setProblem = usePlayback((s) => s.setProblem);
+  const setIsAnalyzing = usePlayback((s) => s.setIsAnalyzing);
 
   const analyzeFn = useServerFn(analyzeCode);
   const fetchFn = useServerFn(fetchLeetCodeProblem);
@@ -51,8 +52,10 @@ export function CodeWorkspace() {
       setAnalysis(data);
       toast.success(`Detected pattern: ${data.pattern}`);
     },
-    onError: (err: Error) =>
-      toast.error(err.message || "Analysis failed. Try again."),
+    onError: (err: Error) => {
+      setIsAnalyzing(false);
+      toast.error(err.message || "Analysis failed. Try again.");
+    },
   });
 
   const fetchMut = useMutation({
@@ -96,7 +99,10 @@ export function CodeWorkspace() {
             </SelectContent>
           </Select>
           <Button
-            onClick={() => analyzeMut.mutate({ code, language })}
+            onClick={() => {
+              setIsAnalyzing(true);
+              analyzeMut.mutate({ code, language });
+            }}
             disabled={analyzeMut.isPending || code.trim().length < 5}
             className="ml-auto h-8 gap-2 bg-gradient-to-r from-[var(--neon-cyan)] to-[var(--neon-pink)] font-semibold text-[var(--primary-foreground)] hover:opacity-90"
           >

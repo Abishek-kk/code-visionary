@@ -1,12 +1,67 @@
 import { motion } from "motion/react";
 import { Sparkles, Clock, Database, Lightbulb } from "lucide-react";
 import { usePlayback } from "@/stores/playback";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 
 export function InfoPanel() {
   const analysis = usePlayback((s) => s.analysis);
+  const isAnalyzing = usePlayback((s) => s.isAnalyzing);
   const stepIndex = usePlayback((s) => s.stepIndex);
   const problem = usePlayback((s) => s.problem);
+
+  if (isAnalyzing) {
+    return (
+      <div className="flex h-full flex-col gap-3 overflow-y-auto pr-1">
+        {/* Pattern skeleton */}
+        <div className="glass rounded-2xl p-4">
+          <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
+            Pattern
+          </div>
+          <Skeleton className="h-8 w-32 rounded-full" />
+        </div>
+
+        {/* Complexity skeletons */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="glass rounded-2xl p-3">
+            <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
+              <Clock className="size-3" /> Time
+            </div>
+            <Skeleton className="h-6 w-20" />
+          </div>
+          <div className="glass rounded-2xl p-3">
+            <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
+              <Database className="size-3" /> Space
+            </div>
+            <Skeleton className="h-6 w-20" />
+          </div>
+        </div>
+
+        {/* Explanation skeleton */}
+        <div className="glass rounded-2xl p-4">
+          <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
+            Step Explanation
+          </div>
+          <div className="flex flex-col gap-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+            <Skeleton className="h-4 w-4/6" />
+          </div>
+        </div>
+
+        {/* Insight skeleton */}
+        <div className="glass gradient-border rounded-2xl p-4">
+          <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-[var(--neon-pink)] mb-2">
+            <Lightbulb className="size-3" /> Key Insight
+          </div>
+          <div className="flex flex-col gap-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!analysis) {
     return (

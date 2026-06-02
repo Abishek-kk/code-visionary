@@ -7,6 +7,7 @@ interface PlaybackState {
   stepIndex: number;
   playing: boolean;
   speed: number; // multiplier
+  isAnalyzing: boolean;
   setAnalysis: (a: AnalysisResult | null) => void;
   setProblem: (p: LeetCodeProblem | null) => void;
   setStep: (i: number) => void;
@@ -15,6 +16,7 @@ interface PlaybackState {
   togglePlay: () => void;
   setPlaying: (b: boolean) => void;
   setSpeed: (s: number) => void;
+  setIsAnalyzing: (b: boolean) => void;
   restart: () => void;
 }
 
@@ -24,7 +26,8 @@ export const usePlayback = create<PlaybackState>((set, get) => ({
   stepIndex: 0,
   playing: false,
   speed: 1,
-  setAnalysis: (a) => set({ analysis: a, stepIndex: 0, playing: false }),
+  isAnalyzing: false,
+  setAnalysis: (a) => set({ analysis: a, stepIndex: 0, playing: false, isAnalyzing: false }),
   setProblem: (p) => set({ problem: p }),
   setStep: (i) => {
     const total = get().analysis?.steps.length ?? 0;
@@ -40,5 +43,6 @@ export const usePlayback = create<PlaybackState>((set, get) => ({
   togglePlay: () => set({ playing: !get().playing }),
   setPlaying: (b) => set({ playing: b }),
   setSpeed: (s) => set({ speed: s }),
+  setIsAnalyzing: (b) => set({ isAnalyzing: b }),
   restart: () => set({ stepIndex: 0, playing: false }),
 }));

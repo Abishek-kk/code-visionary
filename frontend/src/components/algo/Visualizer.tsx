@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { usePlayback } from "@/stores/playback";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ArrayCanvas } from "./ArrayCanvas";
 import { StackVisualizer } from "./StackVisualizer";
 import { BinarySearchVisualizer } from "./BinarySearchVisualizer";
@@ -12,7 +13,45 @@ import { BacktrackVisualizer } from "./BacktrackVisualizer";
 
 export function Visualizer() {
   const analysis = usePlayback((s) => s.analysis);
+  const isAnalyzing = usePlayback((s) => s.isAnalyzing);
   const stepIndex = usePlayback((s) => s.stepIndex);
+
+  if (isAnalyzing) {
+    return (
+      <div className="flex h-full w-full flex-col items-center justify-center gap-6 p-6">
+        <div className="flex flex-col gap-4 w-full max-w-md">
+          {/* Row 1 */}
+          <div className="flex gap-3">
+            <Skeleton className="h-16 w-16 rounded-lg" />
+            <Skeleton className="h-16 w-20 rounded-lg" />
+            <Skeleton className="h-16 w-16 rounded-lg" />
+            <Skeleton className="h-16 w-24 rounded-lg" />
+            <Skeleton className="h-16 w-16 rounded-lg" />
+            <Skeleton className="h-16 w-20 rounded-lg" />
+          </div>
+          {/* Row 2 */}
+          <div className="flex gap-3">
+            <Skeleton className="h-16 w-20 rounded-lg" />
+            <Skeleton className="h-16 w-16 rounded-lg" />
+            <Skeleton className="h-16 w-24 rounded-lg" />
+            <Skeleton className="h-16 w-20 rounded-lg" />
+            <Skeleton className="h-16 w-16 rounded-lg" />
+            <Skeleton className="h-16 w-20 rounded-lg" />
+          </div>
+          {/* Row 3 */}
+          <div className="flex gap-3">
+            <Skeleton className="h-16 w-24 rounded-lg" />
+            <Skeleton className="h-16 w-20 rounded-lg" />
+            <Skeleton className="h-16 w-16 rounded-lg" />
+            <Skeleton className="h-16 w-20 rounded-lg" />
+            <Skeleton className="h-16 w-24 rounded-lg" />
+            <Skeleton className="h-16 w-16 rounded-lg" />
+          </div>
+        </div>
+        <p className="text-sm text-muted-foreground font-mono">Analyzing your code…</p>
+      </div>
+    );
+  }
 
   if (!analysis) {
     return (
