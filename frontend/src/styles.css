@@ -1,0 +1,131 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-display: "Syne", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-panel: var(--panel);
+  --color-panel-foreground: var(--panel-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-neon-cyan: var(--neon-cyan);
+  --color-neon-green: var(--neon-green);
+  --color-neon-amber: var(--neon-amber);
+  --color-neon-pink: var(--neon-pink);
+
+  --shadow-glow-cyan: 0 0 24px color-mix(in oklab, var(--neon-cyan) 60%, transparent);
+  --shadow-glow-green: 0 0 24px color-mix(in oklab, var(--neon-green) 60%, transparent);
+  --shadow-glow-amber: 0 0 24px color-mix(in oklab, var(--neon-amber) 60%, transparent);
+}
+
+:root {
+  --background: oklch(0.13 0.02 270);
+  --foreground: oklch(0.97 0.01 240);
+  --panel: oklch(0.17 0.025 270);
+  --panel-foreground: oklch(0.97 0.01 240);
+  --card: oklch(0.18 0.025 270);
+  --card-foreground: oklch(0.97 0.01 240);
+  --popover: oklch(0.17 0.025 270);
+  --popover-foreground: oklch(0.97 0.01 240);
+
+  --primary: oklch(0.82 0.18 220);          /* neon cyan */
+  --primary-foreground: oklch(0.15 0.02 270);
+  --secondary: oklch(0.25 0.03 270);
+  --secondary-foreground: oklch(0.97 0.01 240);
+  --muted: oklch(0.22 0.025 270);
+  --muted-foreground: oklch(0.65 0.02 260);
+  --accent: oklch(0.28 0.04 270);
+  --accent-foreground: oklch(0.97 0.01 240);
+  --destructive: oklch(0.65 0.22 25);
+  --destructive-foreground: oklch(0.97 0 0);
+  --border: oklch(0.28 0.03 270 / 60%);
+  --input: oklch(0.25 0.03 270);
+  --ring: oklch(0.82 0.18 220);
+
+  --neon-cyan: oklch(0.85 0.18 220);
+  --neon-green: oklch(0.88 0.22 150);
+  --neon-amber: oklch(0.85 0.17 80);
+  --neon-pink: oklch(0.78 0.22 340);
+
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html, body, #root {
+    height: 100%;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 0%, color-mix(in oklab, var(--neon-cyan) 10%, transparent), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 100% 100%, color-mix(in oklab, var(--neon-pink) 10%, transparent), transparent 60%);
+    background-attachment: fixed;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: color-mix(in oklab, var(--panel) 75%, transparent);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--border);
+  }
+  .font-display { font-family: var(--font-display); }
+  .font-mono { font-family: var(--font-mono); }
+  .text-glow-cyan { text-shadow: 0 0 12px color-mix(in oklab, var(--neon-cyan) 70%, transparent); }
+  .text-glow-green { text-shadow: 0 0 12px color-mix(in oklab, var(--neon-green) 70%, transparent); }
+  .ring-glow-cyan { box-shadow: var(--shadow-glow-cyan); }
+  .ring-glow-green { box-shadow: var(--shadow-glow-green); }
+  .ring-glow-amber { box-shadow: var(--shadow-glow-amber); }
+  .gradient-border {
+    background:
+      linear-gradient(var(--panel), var(--panel)) padding-box,
+      linear-gradient(135deg, var(--neon-cyan), var(--neon-pink)) border-box;
+    border: 1px solid transparent;
+  }
+}
+
+@keyframes grid-pan {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 40px; }
+}
+.bg-grid {
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--neon-cyan) 8%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--neon-cyan) 8%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: grid-pan 12s linear infinite;
+}
