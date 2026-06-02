@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Cpu, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Cpu, Sparkles, Code2, Play, Info } from "lucide-react";
 import { CodeWorkspace } from "@/components/algo/CodeWorkspace";
 import { Visualizer } from "@/components/algo/Visualizer";
 import { PlaybackControls } from "@/components/algo/PlaybackControls";
 import { InfoPanel } from "@/components/algo/InfoPanel";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { usePlayback } from "@/stores/playback";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,7 +28,32 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
+type Tab = "editor" | "visualizer" | "info";
+
 function Home() {
+  const isMobile = useIsMobile();
+  const analysis = usePlayback((s) => s.analysis);
+  const [activeTab, setActiveTab] = useState<Tab>("editor");
+  const [prevAnalysis, setPrevAnalysis] = useState(analysis);
+
+  // Auto-switch to visualizer when analysis completes on mobile
+  useEffect(() => {
+    if (isMobile && !prevAnalysis && analysis) {
+      setActiveTab("visualizer");
+    }
+    setPrevAnalysis(analysis);
+  }, [analysis, prevAnalysis, isMobile]);
+
+  const tabs: Array<{
+    id: Tab;
+    label: string;
+    icon: typeof Code2;
+  }> = [
+    { id: "editor", label: "Editor", icon: Code2 },
+    { id: "visualizer", label: "Visualizer", icon: Play },
+    { id: "info", label: "Info", icon: Info },
+  ];
+
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <header className="flex items-center gap-3 border-b border-border px-5 py-3">
@@ -51,24 +79,66 @@ function Home() {
       </header>
 
       <main className="grid flex-1 gap-3 overflow-hidden p-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,0.9fr)]">
-        {/* Left: editor */}
-        <section className="flex h-full min-h-0 flex-col">
-          <CodeWorkspace />
-        </section>
+        {/* Left: editor - hidden on mobile except when active tab */}
+        {(!isMobile || activeTab === "editor") && (
+          <section className="flex h-full min-h-0 flex-col">
+            <CodeWorkspace />
+          </section>
+        )}
 
-        {/* Center: visualizer + controls */}
-        <section className="flex h-full min-h-0 flex-col gap-3">
-          <div className="glass relative flex-1 overflow-hidden rounded-2xl">
-            <Visualizer />
-          </div>
-          <PlaybackControls />
-        </section>
+        {/* Center: visualizer + controls - hidden on mobile except when active tab */}
+        {(!isMobile || activeTab === "visualizer") && (
+          <section className="flex h-full min-h-0 flex-col gap-3">
+            <div className="glass relative flex-1 overflow-hidden rounded-2xl">
+              <Visualizer />
+            </div>
+            <PlaybackControls />
+          </section>
+        )}
 
-        {/* Right: info panel */}
-        <aside className="h-full min-h-0">
-          <InfoPanel />
-        </aside>
+        {/* Right: info panel - hidden on mobile except when active tab */}
+        {(!isMobile || activeTab === "info") && (
+          <aside className="h-full min-h-0">
+            <InfoPanel />
+          </aside>
+        )}
       </main>
+
+      {/* Mobile tab bar - only show on mobile */}
+      {isMobile && (
+        <div className="border-t border-border bg-[var(--panel)] px-2 py-2">
+          <div className="flex justify-around gap-1">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className="flex flex-col items-center gap-1 rounded-lg px-4 py-2 transition-all"
+                  style={{
+                    color: isActive
+                      ? "var(--neon-cyan)"
+                      : "var(--muted-foreground)",
+                    background: isActive
+                      ? "color-mix(in oklab, var(--neon-cyan) 12%, var(--panel))"
+                      : "transparent",
+                    boxShadow: isActive
+                      ? "0 0 16px color-mix(in oklab, var(--neon-cyan) 40%, transparent)"
+                      : "none",
+                  }}
+                >
+                  <Icon className="size-5" />
+                  <span className="text-[10px] font-semibold uppercase tracking-wider">
+                    {tab.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
