@@ -29,8 +29,8 @@ Return ONLY a JSON object matching this schema via the provided tool. No prose.`
 export const analyzeCode = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => InputSchema.parse(data))
   .handler(async ({ data }): Promise<AnalysisResult> => {
-    const apiKey = process.env.ALGOVISION_API_KEY;
-    if (!apiKey) throw new Error("ALGOVISION_API_KEY not configured");
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) throw new Error("GROQ_API_KEY not configured");
 
     const tool = {
       type: "function",
@@ -103,14 +103,14 @@ export const analyzeCode = createServerFn({ method: "POST" })
       },
     };
 
-    const res = await fetch("https://ai.gateway.algovision.dev/v1/chat/completions", {
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "llama-3.3-70b-versatile",
         messages: [
           { role: "system", content: SYSTEM },
           {
