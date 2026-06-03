@@ -42,7 +42,7 @@ Return ONLY a JSON object matching this schema via the provided tool. No prose.`
 export const analyzeCode = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => InputSchema.parse(data))
   .handler(async ({ data }): Promise<AnalysisResult> => {
-    const apiBase = process.env.VITE_API_BASE_URL || "http://localhost:5000";
+    const apiBase = process.env.API_BASE_URL || process.env.VITE_API_BASE_URL || "http://localhost:5000";
 
     const res = await fetch(`${apiBase}/api/analyze`, {
       method: "POST",

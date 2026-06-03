@@ -13,7 +13,7 @@ const InputSchema = z.object({
 export const fetchLeetCodeProblem = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => InputSchema.parse(data))
   .handler(async ({ data }): Promise<LeetCodeProblem> => {
-    const apiBase = process.env.VITE_API_BASE_URL || "http://localhost:5000";
+    const apiBase = process.env.API_BASE_URL || process.env.VITE_API_BASE_URL || "http://localhost:5000";
 
     const res = await fetch(`${apiBase}/api/leetcode/problem/${data.slug}`, {
       method: "GET",
