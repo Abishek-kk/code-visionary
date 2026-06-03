@@ -3,7 +3,7 @@ import Editor from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, Play, Link2 } from "lucide-react";
+import { Loader2, Play, Link2, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
