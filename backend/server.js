@@ -1,18 +1,30 @@
 const express = require('express');
 const cors = require('cors');
-const { PORT } = require('./src/config/env');
+const { PORT, FRONTEND_URL } =
+  require('./src/config/env');
 const routes = require('./src/routes');
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+
+app.use(cors({
+  origin: FRONTEND_URL || 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+}));
+
+app.use(express.json({ limit: '50kb' }));
 
 app.use('/api', routes);
 
-// Health
-app.get('/', (req, res) => res.json({ status: 'ok' }));
+app.get('/', (req, res) =>
+  res.json({ status: 'ok', service: 'algovision' })
+);
 
-// Error handler (fallback)
 app.use(require('./src/middleware/errorHandler'));
 
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+app.listen(PORT, () =>
+  console.log(
+    `AlgoVision backend running on port ${PORT}`
+  )
+);
