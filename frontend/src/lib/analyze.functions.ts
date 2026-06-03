@@ -29,115 +29,30 @@ Return ONLY a JSON object matching this schema via the provided tool. No prose.`
 export const analyzeCode = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => InputSchema.parse(data))
   .handler(async ({ data }): Promise<AnalysisResult> => {
-    const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) throw new Error("GROQ_API_KEY not configured");
+    const apiBase =
+      process.env.VITE_API_BASE_URL ||
+      "http://localhost:5000";
 
-    const tool = {
-      type: "function",
-      function: {
-        name: "emit_analysis",
-        description: "Emit the analysis of the given code.",
-        parameters: {
-          type: "object",
-          properties: {
-            pattern: { type: "string" },
-            visualizerType: {
-              type: "string",
-              enum: ["array", "twoPointer", "slidingWindow", "stack"],
-            },
-            complexity: {
-              type: "object",
-              properties: {
-                time: { type: "string" },
-                space: { type: "string" },
-              },
-              required: ["time", "space"],
-              additionalProperties: false,
-            },
-            insight: { type: "string" },
-            steps: {
-              type: "array",
-              minItems: 4,
-              maxItems: 20,
-              items: {
-                type: "object",
-                properties: {
-                  action: { type: "string" },
-                  explanation: { type: "string" },
-                  array: { type: "array", items: {} },
-                  highlights: { type: "array", items: { type: "number" } },
-                  pointers: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        name: { type: "string" },
-                        index: { type: "number" },
-                        color: {
-                          type: "string",
-                          enum: ["cyan", "green", "amber", "pink"],
-                        },
-                      },
-                      required: ["name", "index"],
-                    },
-                  },
-                  window: {
-                    type: "object",
-                    properties: {
-                      start: { type: "number" },
-                      end: { type: "number" },
-                    },
-                    required: ["start", "end"],
-                  },
-                  stack: { type: "array", items: {} },
-                  result: {},
-                  lineNumber: { type: "number" },
-                },
-                required: ["action", "explanation"],
-              },
-            },
-          },
-          required: ["pattern", "visualizerType", "complexity", "insight", "steps"],
-          additionalProperties: false,
-        },
-      },
-    };
-
-    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const res = await fetch(`${apiBase}/api/analyze`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
-        messages: [
-          { role: "system", content: SYSTEM },
-          {
-            role: "user",
-            content: `Language: ${data.language}\n\nCode:\n\`\`\`${data.language}\n${data.code}\n\`\`\``,
-          },
-        ],
-        tools: [tool],
-        tool_choice: { type: "function", function: { name: "emit_analysis" } },
+        code: data.code,
+        language: data.language,
       }),
     });
 
     if (!res.ok) {
       const text = await res.text();
       if (res.status === 429)
-        throw new Error("Rate limit exceeded. Please wait a moment and try again.");
-      if (res.status === 402)
-        throw new Error("AI credits exhausted. Add credits to continue.");
-      throw new Error(`AI gateway error (${res.status}): ${text.slice(0, 200)}`);
+        throw new Error(
+          "Rate limit exceeded. Please wait and try again."
+        );
+      throw new Error(
+        `Analysis failed (${res.status}): ${text.slice(0, 200)}`
+      );
     }
 
     const json = await res.json();
-    const call = json.choices?.[0]?.message?.tool_calls?.[0];
-    if (!call) throw new Error("No tool call returned from AI.");
-    const args =
-      typeof call.function.arguments === "string"
-        ? JSON.parse(call.function.arguments)
-        : call.function.arguments;
-    return args as AnalysisResult;
+    return json as AnalysisResult;
   });
