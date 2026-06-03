@@ -1,3 +1,6 @@
+// Generic Binary Tree Visualizer
+// Used for BST, tree traversal, and similar patterns
+// Currently available for future pattern expansion
 import { motion } from "motion/react";
 import type { AlgoStep } from "@/lib/algo-types";
 

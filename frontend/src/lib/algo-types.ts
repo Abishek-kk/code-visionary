@@ -10,7 +10,8 @@ export type VisualizerType =
   | "dp"
   | "linkedList"
   | "heap"
-  | "backtrack";
+  | "backtrack"
+  | "tree";
 
 export interface Pointer {
   name: string;

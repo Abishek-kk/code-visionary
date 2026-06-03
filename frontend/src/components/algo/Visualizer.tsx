@@ -10,6 +10,7 @@ import { DPVisualizer } from "./DPVisualizer";
 import { LinkedListVisualizer } from "./LinkedListVisualizer";
 import { HeapVisualizer } from "./HeapVisualizer";
 import { BacktrackVisualizer } from "./BacktrackVisualizer";
+import { TreeVisualizer } from "./TreeVisualizer";
 import { VisualizerErrorBoundary } from "./VisualizerErrorBoundary";
 
 export function Visualizer() {
@@ -98,6 +99,8 @@ export function Visualizer() {
         return <HeapVisualizer step={step} />;
       case "backtrack":
         return <BacktrackVisualizer step={step} />;
+      case "tree":
+        return <TreeVisualizer step={step} />;
       default:
         return <ArrayCanvas step={step} />;
     }
