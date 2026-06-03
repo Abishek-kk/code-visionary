@@ -1,3 +1,6 @@
+// NOTE: This backend is optional. The frontend (TanStack Start)
+// handles AI calls via server functions in src/lib/.
+// Use this server only if deploying frontend as a pure static build.
 const express = require('express');
 const cors = require('cors');
 const { PORT, FRONTEND_URL } =
