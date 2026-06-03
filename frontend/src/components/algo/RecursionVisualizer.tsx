@@ -6,7 +6,16 @@ interface Props {
 }
 
 export function RecursionVisualizer({ step }: Props) {
-  const callStack = step.callStack?.frames ?? [];
+  if (!step.callStack || step.callStack.frames.length === 0) {
+    return (
+      <div className="flex h-full items-center justify-center 
+                      text-muted-foreground text-sm font-mono">
+        No call stack data for this step
+      </div>
+    );
+  }
+
+  const callStack = step.callStack.frames;
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-6 p-6">
