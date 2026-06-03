@@ -135,20 +135,21 @@ export function PlaybackControls() {
           </AnimatePresence>
         </div>
 
-        <div className="ml-auto flex items-center gap-1">
-          {SPEEDS.map((s) => (
-            <button
-              key={s}
-              onClick={() => setSpeed(s)}
-              className={`rounded-md px-2 py-1 font-mono text-[11px] transition-colors ${
-                s === speed
-                  ? "bg-[var(--neon-cyan)]/15 text-[var(--neon-cyan)]"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {s}×
-            </button>
-          ))}
+        <div className="ml-auto flex items-center gap-3">
+          <span className="font-mono text-[10px] text-muted-foreground">
+            Speed
+          </span>
+          <Slider
+            value={[speed]}
+            min={0.5}
+            max={2}
+            step={0.5}
+            onValueChange={(v) => setSpeed(v[0] ?? 1)}
+            className="w-24"
+          />
+          <span className="font-mono text-[11px] text-[var(--neon-cyan)] min-w-[2.5rem]">
+            {speed}×
+          </span>
         </div>
       </div>
 
