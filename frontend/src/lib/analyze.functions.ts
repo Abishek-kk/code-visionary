@@ -5,6 +5,7 @@ import type { AnalysisResult } from "./algo-types";
 const InputSchema = z.object({
   code: z.string().min(5).max(8000),
   language: z.enum(["python", "javascript", "typescript", "java", "cpp", "go"]),
+  testCase: z.string().max(500).optional(),
 });
 
 const SYSTEM = `You are an expert algorithm visualizer. Given a piece of code, you:
@@ -12,7 +13,9 @@ const SYSTEM = `You are an expert algorithm visualizer. Given a piece of code, y
 2. Choose ONE visualizerType from this exact set: "array" | "twoPointer" | "slidingWindow" | "stack" |
 "binarySearch" | "bfs" | "dfs" | "recursion" |
 "dp" | "linkedList" | "heap" | "backtrack".
-3. Produce a step-by-step dry-run as JSON, simulating execution on a SMALL representative input (size 5-9).
+3. Produce a step-by-step dry-run as JSON.
+   - If a Test Case is provided by the user, use EXACTLY that input for the dry run.
+   - Otherwise pick a small representative example (size 5-9).
 4. Each step shows the data structure state AFTER that step.
 
 Rules for steps:
@@ -47,6 +50,7 @@ export const analyzeCode = createServerFn({ method: "POST" })
       body: JSON.stringify({
         code: data.code,
         language: data.language,
+        ...(data.testCase ? { testCase: data.testCase } : {}),
       }),
     });
 

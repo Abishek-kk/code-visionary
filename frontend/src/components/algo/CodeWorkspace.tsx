@@ -35,8 +35,10 @@ export function CodeWorkspace() {
 
   const language = usePlayback((s) => s.language);
   const code = usePlayback((s) => s.code);
+  const testCase = usePlayback((s) => s.testCase);
   const setLanguage = usePlayback((s) => s.setLanguage);
   const setCode = usePlayback((s) => s.setCode);
+  const setTestCase = usePlayback((s) => s.setTestCase);
   const setAnalysis = usePlayback((s) => s.setAnalysis);
   const setProblem = usePlayback((s) => s.setProblem);
   const setIsAnalyzing = usePlayback((s) => s.setIsAnalyzing);
@@ -67,7 +69,8 @@ export function CodeWorkspace() {
   }, [hydrated, code, language, setCode]);
 
   const analyzeMut = useMutation({
-    mutationFn: (vars: { code: string; language: LanguageId }) => analyzeFn({ data: vars }),
+    mutationFn: (vars: { code: string; language: LanguageId; testCase?: string }) =>
+      analyzeFn({ data: vars }),
     onSuccess: (data) => {
       setAnalysis(data);
       toast.success(`Detected pattern: ${data.pattern}`);
@@ -137,7 +140,7 @@ export function CodeWorkspace() {
                 return;
               }
               setIsAnalyzing(true);
-              analyzeMut.mutate({ code, language });
+              analyzeMut.mutate({ code, language, testCase });
             }}
             disabled={analyzeMut.isPending || code.trim().length < 10}
             className="ml-auto h-8 gap-2 bg-gradient-to-r from-[var(--neon-cyan)] to-[var(--neon-pink)] font-semibold text-[var(--primary-foreground)] hover:opacity-90"
@@ -173,6 +176,17 @@ export function CodeWorkspace() {
           >
             {fetchMut.isPending ? <Loader2 className="size-3 animate-spin" /> : "Load"}
           </Button>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-muted-foreground font-mono whitespace-nowrap">
+            Test Input
+          </span>
+          <Input
+            value={testCase}
+            onChange={(e) => setTestCase(e.target.value)}
+            placeholder="e.g. nums=[2,7,11,15], target=9"
+            className="h-8 bg-[var(--panel)] font-mono text-xs"
+          />
         </div>
       </div>
 
