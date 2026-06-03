@@ -121,10 +121,18 @@ export function CodeWorkspace() {
           </Select>
           <Button
             onClick={() => {
+              if (!code || code.trim().length < 10) {
+                toast.error("Please paste a valid code solution (at least 10 characters) before analyzing.");
+                return;
+              }
+              if (code.trim().split('\n').length < 2) {
+                toast.error("Your code seems too short. Paste a complete LeetCode solution.");
+                return;
+              }
               setIsAnalyzing(true);
               analyzeMut.mutate({ code, language });
             }}
-            disabled={analyzeMut.isPending || code.trim().length < 5}
+            disabled={analyzeMut.isPending || code.trim().length < 10}
             className="ml-auto h-8 gap-2 bg-gradient-to-r from-[var(--neon-cyan)] to-[var(--neon-pink)] font-semibold text-[var(--primary-foreground)] hover:opacity-90"
           >
             {analyzeMut.isPending ? (
