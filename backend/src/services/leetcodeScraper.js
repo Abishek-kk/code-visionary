@@ -1,7 +1,6 @@
-require('dotenv').config();
+const { GROQ_API_KEY: apiKey } = require('../config/env');
 
 exports.scrapeProblem = async (slug) => {
-  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     throw new Error('GROQ_API_KEY not configured in environment');
   }
