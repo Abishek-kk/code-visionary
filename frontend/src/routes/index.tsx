@@ -125,7 +125,7 @@ function Home() {
         </div>
       </header>
 
-      <main className="grid flex-1 gap-3 overflow-hidden p-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,0.9fr)]">
+      <main className="grid flex-1 gap-3 overflow-hidden p-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,0.6fr)]">
         {/* Left: editor - hidden on mobile except when active tab */}
         {(!isMobile || activeTab === "editor") && (
           <section className="flex h-full min-h-0 flex-col">

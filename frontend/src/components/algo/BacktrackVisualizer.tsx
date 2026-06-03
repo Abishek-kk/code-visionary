@@ -14,7 +14,7 @@ export function BacktrackVisualizer({ step }: Props) {
     return (
       <div
         className="flex h-full items-center justify-center 
-                       text-muted-foreground text-sm font-mono"
+                      text-muted-foreground text-sm font-mono"
       >
         No backtrack data for this step
       </div>
