@@ -2,7 +2,7 @@ const { detectPattern } = require('../services/claudeService');
 
 exports.analyze = async (req, res, next) => {
   try {
-    const { code, language } = req.body;
+    const { code, language, testCase } = req.body;
 
     if (
       !code ||
@@ -21,7 +21,7 @@ exports.analyze = async (req, res, next) => {
     }
 
     // Single Groq call returns pattern AND steps
-    const result = await detectPattern(code, language);
+    const result = await detectPattern(code, language, testCase);
 
     res.json({
       pattern: result.pattern,

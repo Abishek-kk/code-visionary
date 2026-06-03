@@ -1,7 +1,7 @@
 const { GROQ_API_KEY: apiKey } = require('../config/env');
 const { extractJSON } = require('../utils/jsonExtractor');
 
-exports.detectPattern = async (code, language) => {
+exports.detectPattern = async (code, language, testCase) => {
   if (!apiKey) {
     throw new Error('GROQ_API_KEY not configured in environment');
   }
@@ -12,6 +12,7 @@ exports.detectPattern = async (code, language) => {
 - complexity: { time, space }
 - insight: brief explanation
 - steps: array of 6-18 step objects
+If a Test Case is provided by the user, use EXACTLY that input for the dry run. Otherwise pick a small representative example of size 5-9.
 
 Each step must include:
 - action: 2-5 word label
@@ -43,7 +44,10 @@ Return ONLY valid JSON. No prose or markdown.`;
           { role: 'system', content: systemPrompt },
           {
             role: 'user',
-            content: `Language: ${language}\n\nCode:\n\`\`\`${language}\n${code}\n\`\`\``,
+            content: `Language: ${language}${testCase
+              ? `\nTest Case (USE EXACTLY THIS INPUT for the dry run):
+       ${testCase}`
+              : ''}\n\nCode:\n\`\`\`${language}\n${code}\n\`\`\``,
           },
         ],
         temperature: 0.7,
