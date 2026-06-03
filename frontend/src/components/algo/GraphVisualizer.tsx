@@ -19,7 +19,7 @@ export function GraphVisualizer({ step, visualizerType }: Props) {
   const visited = new Set(graph.visited ?? []);
   const currentNode = graph.current;
   const queue = graph.queue ?? [];
-  const stack = graph.queue ?? []; // Reuse queue for BFS display
+  const stack = (step.graph as any)?.stack ?? graph.queue ?? [];
 
   // Layout nodes in a circle
   const nodeCount = graph.nodes.length;
@@ -134,7 +134,11 @@ export function GraphVisualizer({ step, visualizerType }: Props) {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
-                className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--neon-amber)] bg-[color-mix(in_oklab,var(--neon-amber)_10%,var(--panel))] font-mono text-xs font-semibold text-[var(--neon-amber)]"
+                className={`flex h-10 w-10 items-center justify-center rounded-md border font-mono text-xs font-semibold ${
+                  visualizerType === "bfs"
+                    ? "border-[var(--neon-amber)] bg-[color-mix(in_oklab,var(--neon-amber)_10%,var(--panel))] text-[var(--neon-amber)]"
+                    : "border-[var(--neon-cyan)] bg-[color-mix(in_oklab,var(--neon-cyan)_10%,var(--panel))] text-[var(--neon-cyan)]"
+                }`}
               >
                 {nodeId}
               </motion.div>

@@ -33,6 +33,7 @@ export interface AlgoStep {
     edges: { from: string; to: string }[];
     visited?: string[];
     queue?: string[];
+    stack?: string[];
     current?: string;
   };
   tree?: {
