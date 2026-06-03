@@ -49,6 +49,7 @@ export function CodeWorkspace() {
   const addToHistory = usePlayback((s) => s.addToHistory);
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+  const decorationsRef = useRef<string[]>([]);
 
   const analyzeFn = useServerFn(analyzeCode);
   const fetchFn = useServerFn(fetchLeetCodeProblem);
@@ -78,10 +79,16 @@ export function CodeWorkspace() {
   useEffect(() => {
     const editor = editorRef.current;
     const step = analysis?.steps[stepIndex];
-    if (!editor || !step?.lineNumber) return;
 
-    editor.deltaDecorations(
-      [],
+    if (!editor) return;
+
+    if (!step?.lineNumber) {
+      decorationsRef.current = editor.deltaDecorations(decorationsRef.current, []);
+      return;
+    }
+
+    decorationsRef.current = editor.deltaDecorations(
+      decorationsRef.current,
       [
         {
           range: new (window as any).monaco.Range(step.lineNumber, 1, step.lineNumber, 1),
@@ -96,6 +103,7 @@ export function CodeWorkspace() {
 
     editor.revealLineInCenter(step.lineNumber);
   }, [stepIndex, analysis]);
+
 
   const analyzeMut = useMutation({
     mutationFn: (vars: { code: string; language: LanguageId; testCase?: string }) =>
