@@ -14,6 +14,13 @@ interface PlaybackState {
   code: string;
   testCase: string;
   voiceEnabled: boolean;
+  history: Array<{
+    slug: string;
+    title: string;
+    pattern: string;
+    language: string;
+    timestamp: number;
+  }>;
   setAnalysis: (a: AnalysisResult | null) => void;
   setProblem: (p: LeetCodeProblem | null) => void;
   setStep: (i: number) => void;
@@ -28,6 +35,7 @@ interface PlaybackState {
   setCode: (c: string) => void;
   setTestCase: (t: string) => void;
   setVoiceEnabled: (b: boolean) => void;
+  addToHistory: (item: { slug: string; title: string; pattern: string; language: string }) => void;
   restart: () => void;
 }
 
@@ -45,6 +53,7 @@ export const usePlayback = create<PlaybackState>()(
       code: "",
       testCase: "",
       voiceEnabled: false,
+      history: [],
       setAnalysis: (a) => set({ analysis: a, stepIndex: 0, playing: false, isAnalyzing: false }),
       setProblem: (p) => set({ problem: p }),
       setStep: (i) => {
@@ -67,6 +76,13 @@ export const usePlayback = create<PlaybackState>()(
       setCode: (c) => set({ code: c }),
       setTestCase: (t) => set({ testCase: t }),
       setVoiceEnabled: (b) => set({ voiceEnabled: b }),
+      addToHistory: (item) =>
+        set((state) => ({
+          history: [
+            { ...item, timestamp: Date.now() },
+            ...state.history.filter((h) => h.slug !== item.slug),
+          ].slice(0, 10),
+        })),
       restart: () => set({ stepIndex: 0, playing: false }),
     }),
     {
@@ -76,6 +92,7 @@ export const usePlayback = create<PlaybackState>()(
         code: state.code,
         testCase: state.testCase,
         voiceEnabled: state.voiceEnabled,
+        history: state.history,
         speed: state.speed,
       }),
     },
