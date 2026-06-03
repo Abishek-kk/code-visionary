@@ -103,6 +103,12 @@ export function CodeWorkspace() {
     onSuccess: (data) => {
       setAnalysis(data);
       toast.success(`Detected pattern: ${data.pattern}`);
+      addToHistory({
+        slug: extractLeetCodeSlug(url) || "custom",
+        title: problem?.title || "Custom Code",
+        pattern: data.pattern,
+        language,
+      });
     },
     onError: (err: Error) => {
       setIsAnalyzing(false);
@@ -138,6 +144,16 @@ export function CodeWorkspace() {
       return;
     }
     fetchMut.mutate(slug);
+  }
+
+  function handleShare() {
+    const slug = extractLeetCodeSlug(url);
+    const params = new URLSearchParams();
+    if (slug) params.set("problem", slug);
+    params.set("lang", language);
+    const shareUrl = `${window.location.origin}?${params.toString()}`;
+    navigator.clipboard.writeText(shareUrl);
+    toast.success("Share link copied to clipboard!");
   }
 
   return (
@@ -204,6 +220,10 @@ export function CodeWorkspace() {
             className="h-8"
           >
             {fetchMut.isPending ? <Loader2 className="size-3 animate-spin" /> : "Load"}
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleShare} className="h-8 gap-1">
+            <Share2 className="size-3" />
+            Share
           </Button>
         </div>
         <div className="flex items-center gap-2">
