@@ -60,13 +60,10 @@ export function CodeWorkspace() {
 
   // Initialize with default code if empty after hydration
   useEffect(() => {
-    const unsubscribe = usePlayback.subscribe(
-      (state) => state.code,
-      () => {
-        setHydrated(true);
-      },
-    );
-    return unsubscribe;
+    setHydrated((usePlayback.persist as any).hasHydrated());
+    return (usePlayback.persist as any).onFinishHydration(() => {
+      setHydrated(true);
+    });
   }, []);
 
   // Set default code for language if code is empty
@@ -91,7 +88,12 @@ export function CodeWorkspace() {
       decorationsRef.current,
       [
         {
-          range: new (window as any).monaco.Range(step.lineNumber, 1, step.lineNumber, 1),
+          range: {
+            startLineNumber: step.lineNumber,
+            startColumn: 1,
+            endLineNumber: step.lineNumber,
+            endColumn: 1,
+          },
           options: {
             isWholeLine: true,
             className: "monaco-executing-line",
@@ -193,7 +195,7 @@ export function CodeWorkspace() {
                 return;
               }
               setIsAnalyzing(true);
-              analyzeMut.mutate({ code, language, testCase });
+              analyzeMut.mutate({ code, language: language as LanguageId, testCase });
             }}
             disabled={analyzeMut.isPending || code.trim().length < 10}
             className="ml-auto h-8 gap-2 bg-gradient-to-r from-[var(--neon-cyan)] to-[var(--neon-pink)] font-semibold text-[var(--primary-foreground)] hover:opacity-90"
@@ -252,7 +254,7 @@ export function CodeWorkspace() {
           <Editor
             height="100%"
             theme="vs-dark"
-            language={monacoLangMap[language]}
+            language={monacoLangMap[language as LanguageId]}
             value={code}
             onChange={(v) => setCode(v ?? "")}
             onMount={(editor) => {

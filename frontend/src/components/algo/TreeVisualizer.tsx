@@ -139,37 +139,25 @@ export function TreeVisualizer({ step }: Props) {
 
             if (isCurrent) {
               fillColor =
-                "color-mix(in oklab, 
-                  var(--neon-cyan) 25%, var(--panel))";
+                "color-mix(in oklab, var(--neon-cyan) 25%, var(--panel))";
               strokeColor = "var(--neon-cyan)";
               textColor = "var(--neon-cyan)";
               glowFilter =
-                "drop-shadow(0 0 8px 
-                  color-mix(in oklab, 
-                    var(--neon-cyan) 70%, 
-                    transparent))";
+                "drop-shadow(0 0 8px color-mix(in oklab, var(--neon-cyan) 70%, transparent))";
             } else if (isVisited) {
               fillColor =
-                "color-mix(in oklab, 
-                  var(--neon-green) 20%, var(--panel))";
+                "color-mix(in oklab, var(--neon-green) 20%, var(--panel))";
               strokeColor = "var(--neon-green)";
               textColor = "var(--neon-green)";
               glowFilter =
-                "drop-shadow(0 0 6px 
-                  color-mix(in oklab, 
-                    var(--neon-green) 50%, 
-                    transparent))";
+                "drop-shadow(0 0 6px color-mix(in oklab, var(--neon-green) 50%, transparent))";
             } else if (isRoot) {
               fillColor =
-                "color-mix(in oklab, 
-                  var(--neon-amber) 20%, var(--panel))";
+                "color-mix(in oklab, var(--neon-amber) 20%, var(--panel))";
               strokeColor = "var(--neon-amber)";
               textColor = "var(--neon-amber)";
               glowFilter =
-                "drop-shadow(0 0 6px 
-                  color-mix(in oklab, 
-                    var(--neon-amber) 50%, 
-                    transparent))";
+                "drop-shadow(0 0 6px color-mix(in oklab, var(--neon-amber) 50%, transparent))";
             }
 
             return (

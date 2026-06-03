@@ -103,7 +103,8 @@ export function HeapVisualizer({ step }: Props) {
 
           {/* Nodes */}
           {nodes.map((node) => {
-            if (node.x === undefined || node.y === undefined) return null;
+            const layoutNode = nodeMap.get(node.id);
+            if (!layoutNode || layoutNode.x === undefined || layoutNode.y === undefined) return null;
 
             const isRoot = nodes[0]?.id === node.id;
             const isVisited = visited.has(node.id);
@@ -134,8 +135,8 @@ export function HeapVisualizer({ step }: Props) {
             return (
               <g key={`node-${node.id}`}>
                 <motion.circle
-                  cx={node.x}
-                  cy={node.y}
+                  cx={layoutNode.x}
+                  cy={layoutNode.y}
                   r="24"
                   fill={fillColor}
                   stroke={strokeColor}
@@ -145,8 +146,8 @@ export function HeapVisualizer({ step }: Props) {
                   }}
                 />
                 <text
-                  x={node.x}
-                  y={node.y}
+                  x={layoutNode.x}
+                  y={layoutNode.y}
                   textAnchor="middle"
                   dominantBaseline="middle"
                   className="font-mono font-bold"

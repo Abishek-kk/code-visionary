@@ -128,7 +128,7 @@ export function GraphVisualizer({ step, visualizerType }: Props) {
             {visualizerType === "bfs" ? "Queue" : "Stack"}
           </p>
           <div className="flex gap-2">
-            {(visualizerType === "bfs" ? queue : stack).map((nodeId, idx) => (
+            {(visualizerType === "bfs" ? queue : stack).map((nodeId: string, idx: number) => (
               <motion.div
                 key={`${idx}-${nodeId}`}
                 initial={{ opacity: 0, scale: 0.8 }}
