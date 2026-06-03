@@ -6,21 +6,20 @@ interface Props {
 }
 
 export function BacktrackVisualizer({ step }: Props) {
-  if (!step.tree || !step.tree.nodes) {
+  const callStack = step.callStack?.frames ?? [];
+  const array = step.array ?? [];
+  const highlights = new Set(step.highlights ?? []);
+
+  if (callStack.length === 0 && array.length === 0) {
     return (
       <div
         className="flex h-full items-center justify-center 
-                      text-muted-foreground text-sm font-mono"
+                       text-muted-foreground text-sm font-mono"
       >
         No backtrack data for this step
       </div>
     );
   }
-
-  // Use the call stack to represent backtracking branches
-  const callStack = step.callStack?.frames ?? [];
-  const array = step.array ?? [];
-  const highlights = new Set(step.highlights ?? []);
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-8 p-6">
