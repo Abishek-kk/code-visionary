@@ -106,7 +106,16 @@ export function InfoPanel() {
       {problem && (
         <div className="glass rounded-2xl p-4">
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="border-[var(--neon-pink)] text-[var(--neon-pink)]">
+            <Badge
+              variant="outline"
+              className={
+                problem.difficulty === "Easy"
+                  ? "border-[var(--neon-green)] text-[var(--neon-green)]"
+                  : problem.difficulty === "Medium"
+                    ? "border-[var(--neon-amber)] text-[var(--neon-amber)]"
+                    : "border-red-400 text-red-400"
+              }
+            >
               {problem.difficulty}
             </Badge>
             <h3 className="font-display text-base">{problem.title}</h3>
