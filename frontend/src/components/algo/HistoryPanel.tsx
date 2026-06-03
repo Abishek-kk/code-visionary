@@ -65,6 +65,11 @@ export function HistoryPanel() {
             key={item.slug + item.timestamp}
             onClick={() => handleHistoryClick(item)}
             disabled={item.slug === "custom"}
+            title={
+              item.slug === "custom"
+                ? "Custom code runs cannot be reloaded because they are not linked to a LeetCode problem"
+                : "Click to load this LeetCode problem"
+            }
             className="flex w-full flex-col gap-1 rounded-xl
                        border border-border bg-[var(--panel)]
                        p-3 text-left transition-all
@@ -91,6 +96,13 @@ export function HistoryPanel() {
                                text-muted-foreground">
                 {LANG_LABEL[item.language] ?? item.language}
               </span>
+              {item.slug === "custom" && (
+                <span className="rounded-full border border-dashed border-border
+                                 px-2 py-0.5 text-[9px] font-mono
+                                 text-muted-foreground/85">
+                  Custom Run
+                </span>
+              )}
             </div>
           </button>
         ))}
