@@ -9,8 +9,34 @@ const routes = require('./src/routes');
 
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://localhost:5174',
+];
+
+if (FRONTEND_URL) {
+  FRONTEND_URL.split(',').forEach(url => {
+    const trimmed = url.trim();
+    if (trimmed) allowedOrigins.push(trimmed);
+  });
+}
+
 app.use(cors({
-  origin: FRONTEND_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    const isAllowed = allowedOrigins.includes(origin) || 
+                      /^https?:\/\/localhost:\d+$/.test(origin) ||
+                      /^https?:\/\/127\.0\.0\.1:\d+$/.test(origin);
+
+    if (isAllowed) {
+      return callback(null, true);
+    }
+
+    console.warn(`CORS request from unlisted origin: ${origin}`);
+    return callback(null, true);
+  },
   credentials: true,
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type'],
