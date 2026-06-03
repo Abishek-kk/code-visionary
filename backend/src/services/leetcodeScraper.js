@@ -11,8 +11,9 @@ exports.scrapeProblem = async (slug) => {
 - description: problem description (max 600 chars)
 - examples: array of max 3 objects with {input, output, explanation?}
 - constraints: array of constraint strings
+- isGuessed: boolean, true if you are not 100% certain about this problem, false if you know it well
 
-If you don't know the problem, return your best educated guess clearly marked.
+If you don't know the problem, return your best educated guess with isGuessed: true.
 Return ONLY valid JSON. No prose or markdown.`;
 
   try {
@@ -61,6 +62,7 @@ Return ONLY valid JSON. No prose or markdown.`;
       description: problem.description || 'No description available',
       examples: problem.examples || [],
       constraints: problem.constraints || [],
+      isGuessed: problem.isGuessed ?? true,
     };
   } catch (error) {
     if (error instanceof SyntaxError) {

@@ -70,4 +70,5 @@ export interface LeetCodeProblem {
   description: string;
   examples: { input: string; output: string; explanation?: string }[];
   constraints: string[];
+  isGuessed?: boolean;
 }

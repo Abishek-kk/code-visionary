@@ -84,6 +84,12 @@ export function InfoPanel() {
             </Badge>
             <h3 className="font-display text-base">{problem.title}</h3>
           </div>
+          {problem.isGuessed && (
+            <div className="mt-2 flex items-center gap-1 text-[10px] text-[var(--neon-amber)] font-mono">
+              <span>⚠</span>
+              <span>AI-reconstructed — may not be 100% accurate</span>
+            </div>
+          )}
           <p className="mt-2 text-xs leading-relaxed text-muted-foreground line-clamp-4">
             {problem.description}
           </p>
