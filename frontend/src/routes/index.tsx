@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Cpu, Sparkles, Code2, Play, Info } from "lucide-react";
+import { Cpu, Sparkles, Code2, Play, Info, Sun, Moon } from "lucide-react";
 import { CodeWorkspace } from "@/components/algo/CodeWorkspace";
 import { Visualizer } from "@/components/algo/Visualizer";
 import { PlaybackControls } from "@/components/algo/PlaybackControls";
@@ -9,6 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { usePlayback } from "@/stores/playback";
 import { useServerFn } from "@tanstack/react-start";
 import { fetchLeetCodeProblem } from "@/lib/leetcode.functions";
+import { useTheme } from "@/hooks/useTheme";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -34,6 +35,7 @@ type Tab = "editor" | "visualizer" | "info";
 
 function Home() {
   const isMobile = useIsMobile();
+  const { theme, toggleTheme } = useTheme();
   const analysis = usePlayback((s) => s.analysis);
   const [activeTab, setActiveTab] = useState<Tab>("editor");
   const [prevAnalysis, setPrevAnalysis] = useState(analysis);
@@ -103,7 +105,15 @@ function Home() {
             AI-powered LeetCode algorithm visualizer
           </p>
         </div>
-        <div className="ml-auto flex items-center gap-2 rounded-full border border-border bg-[var(--panel)]/50 px-3 py-1 text-[11px] text-muted-foreground">
+        <button
+          onClick={toggleTheme}
+          className="ml-auto flex items-center justify-center size-8 rounded-full border border-border bg-[var(--panel)] text-muted-foreground hover:text-foreground hover:border-[var(--neon-cyan)] transition-colors"
+          aria-label="Toggle theme"
+          title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+        </button>
+        <div className="flex items-center gap-2 rounded-full border border-border bg-[var(--panel)]/50 px-3 py-1 text-[11px] text-muted-foreground">
           <Sparkles className="size-3 text-[var(--neon-cyan)]" />
           <span className="font-mono">space</span> play
           <span className="mx-1">·</span>

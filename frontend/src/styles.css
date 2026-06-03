@@ -79,6 +79,26 @@
   --radius: 0.75rem;
 }
 
+[data-theme="light"] {
+  --background: oklch(0.97 0.005 240);
+  --foreground: oklch(0.15 0.02 270);
+  --panel: oklch(0.93 0.008 240);
+  --panel-foreground: oklch(0.15 0.02 270);
+  --card: oklch(0.95 0.008 240);
+  --card-foreground: oklch(0.15 0.02 270);
+  --popover: oklch(0.95 0.008 240);
+  --popover-foreground: oklch(0.15 0.02 270);
+  --muted: oklch(0.88 0.01 240);
+  --muted-foreground: oklch(0.45 0.02 260);
+  --accent: oklch(0.85 0.015 240);
+  --border: oklch(0.80 0.01 270 / 60%);
+  --input: oklch(0.88 0.01 240);
+  --neon-cyan: oklch(0.55 0.18 220);
+  --neon-green: oklch(0.50 0.22 150);
+  --neon-amber: oklch(0.55 0.17 80);
+  --neon-pink: oklch(0.55 0.22 340);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
