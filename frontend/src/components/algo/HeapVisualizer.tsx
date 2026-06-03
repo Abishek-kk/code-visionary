@@ -39,7 +39,7 @@ export function HeapVisualizer({ step }: Props) {
     nodeId: string | undefined,
     x: number,
     y: number,
-    offset: number
+    offset: number,
   ): void => {
     if (!nodeId) return;
     const node = nodeMap.get(nodeId);
@@ -73,8 +73,7 @@ export function HeapVisualizer({ step }: Props) {
           {/* Edges */}
           {nodes.map((node) => {
             const parent = nodeMap.get(node.id);
-            if (!parent || parent.x === undefined || parent.y === undefined)
-              return null;
+            if (!parent || parent.x === undefined || parent.y === undefined) return null;
 
             return (
               <g key={`edges-${node.id}`}>
@@ -177,14 +176,8 @@ export function HeapVisualizer({ step }: Props) {
               animate={{ opacity: 1, scale: 1 }}
               className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--panel)] font-mono text-xs font-semibold"
               style={{
-                color:
-                  currentNode === node.id
-                    ? "var(--neon-cyan)"
-                    : "var(--foreground)",
-                borderColor:
-                  currentNode === node.id
-                    ? "var(--neon-cyan)"
-                    : "var(--border)",
+                color: currentNode === node.id ? "var(--neon-cyan)" : "var(--foreground)",
+                borderColor: currentNode === node.id ? "var(--neon-cyan)" : "var(--border)",
               }}
             >
               {node.value}

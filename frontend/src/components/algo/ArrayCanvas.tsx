@@ -22,6 +22,17 @@ export function ArrayCanvas({ step, showWindow, showStack }: Props) {
   const pointers = step.pointers ?? [];
   const window = step.window;
 
+  const boxSize =
+    array.length > 7
+      ? "h-10 w-10 text-sm"
+      : array.length > 5
+        ? "h-12 w-12 text-base"
+        : "h-16 w-16 text-lg";
+
+  const gapSize = array.length > 7 ? "gap-1" : array.length > 5 ? "gap-2" : "gap-3";
+
+  const cellWidth = array.length > 7 ? 44 : array.length > 5 ? 52 : 76;
+
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-12 p-6">
       {array.length > 0 && (
@@ -33,14 +44,14 @@ export function ArrayCanvas({ step, showWindow, showStack }: Props) {
               transition={{ type: "spring", stiffness: 180, damping: 22 }}
               className="absolute -inset-y-3 rounded-xl border border-[var(--neon-amber)] bg-[color-mix(in_oklab,var(--neon-amber)_8%,transparent)]"
               style={{
-                left: `calc(${window.start} * (4rem + 0.75rem))`,
-                width: `calc(${window.end - window.start + 1} * (4rem + 0.75rem) - 0.75rem)`,
+                left: `calc(${window.start} * ${cellWidth}px)`,
+                width: `calc(${window.end - window.start + 1} * ${cellWidth}px - ${cellWidth / 4}px)`,
                 boxShadow: "0 0 28px color-mix(in oklab, var(--neon-amber) 50%, transparent)",
               }}
             />
           )}
 
-          <div className="flex items-end gap-3">
+          <div className={`flex items-end ${gapSize}`}>
             {array.map((v, i) => {
               const isHi = highlights.has(i);
               return (
@@ -54,7 +65,7 @@ export function ArrayCanvas({ step, showWindow, showStack }: Props) {
                     scale: isHi ? 1.08 : 1,
                   }}
                   transition={{ type: "spring", stiffness: 260, damping: 22 }}
-                  className="relative flex h-16 w-16 items-center justify-center rounded-lg font-mono text-lg font-semibold"
+                  className={`relative flex items-center justify-center rounded-lg font-mono font-semibold ${boxSize}`}
                   style={{
                     background: isHi
                       ? "color-mix(in oklab, var(--neon-cyan) 22%, var(--panel))"
@@ -73,15 +84,19 @@ export function ArrayCanvas({ step, showWindow, showStack }: Props) {
           </div>
 
           {/* Index labels */}
-          <div className="mt-2 flex gap-3">
-            {array.map((_, i) => (
-              <div
-                key={i}
-                className="w-16 text-center font-mono text-[10px] text-muted-foreground"
-              >
-                {i}
-              </div>
-            ))}
+          <div className={`mt-2 flex ${gapSize}`}>
+            {array.map((_, i) => {
+              const indexBoxWidth = array.length > 7 ? 28 : array.length > 5 ? 36 : 52;
+              return (
+                <div
+                  key={i}
+                  className="text-center font-mono text-[10px] text-muted-foreground"
+                  style={{ width: indexBoxWidth }}
+                >
+                  {i}
+                </div>
+              );
+            })}
           </div>
 
           {/* Pointers */}
@@ -99,7 +114,7 @@ export function ArrayCanvas({ step, showWindow, showStack }: Props) {
                     transition={{ type: "spring", stiffness: 200, damping: 20 }}
                     className="absolute flex flex-col items-center"
                     style={{
-                      left: `calc(${p.index} * (4rem + 0.75rem) + 2rem)`,
+                      left: `calc(${p.index} * ${cellWidth}px + ${cellWidth / 2}px)`,
                       top: offset,
                       transform: "translateX(-50%)",
                       color,
@@ -140,12 +155,12 @@ export function ArrayCanvas({ step, showWindow, showStack }: Props) {
               className="flex h-12 w-28 items-center justify-center rounded-md font-mono text-base"
               style={{
                 background:
-                  i === (step.stack!.length - 1)
+                  i === step.stack!.length - 1
                     ? "color-mix(in oklab, var(--neon-green) 22%, var(--panel))"
                     : "var(--panel)",
-                border: `1px solid ${i === (step.stack!.length - 1) ? "var(--neon-green)" : "var(--border)"}`,
+                border: `1px solid ${i === step.stack!.length - 1 ? "var(--neon-green)" : "var(--border)"}`,
                 boxShadow:
-                  i === (step.stack!.length - 1)
+                  i === step.stack!.length - 1
                     ? "0 0 22px color-mix(in oklab, var(--neon-green) 50%, transparent)"
                     : "none",
               }}

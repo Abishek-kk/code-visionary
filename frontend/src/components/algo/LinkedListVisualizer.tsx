@@ -60,12 +60,8 @@ export function LinkedListVisualizer({ step }: Props) {
                     background: hasPointers
                       ? "color-mix(in oklab, var(--neon-cyan) 22%, var(--panel))"
                       : "var(--panel)",
-                    border: `2px solid ${
-                      hasPointers ? "var(--neon-cyan)" : "var(--border)"
-                    }`,
-                    color: hasPointers
-                      ? "var(--neon-cyan)"
-                      : "var(--foreground)",
+                    border: `2px solid ${hasPointers ? "var(--neon-cyan)" : "var(--border)"}`,
+                    color: hasPointers ? "var(--neon-cyan)" : "var(--foreground)",
                     boxShadow: hasPointers
                       ? "0 0 16px color-mix(in oklab, var(--neon-cyan) 50%, transparent)"
                       : "none",

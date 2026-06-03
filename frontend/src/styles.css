@@ -57,7 +57,7 @@
   --popover: oklch(0.17 0.025 270);
   --popover-foreground: oklch(0.97 0.01 240);
 
-  --primary: oklch(0.82 0.18 220);          /* neon cyan */
+  --primary: oklch(0.82 0.18 220); /* neon cyan */
   --primary-foreground: oklch(0.15 0.02 270);
   --secondary: oklch(0.25 0.03 270);
   --secondary-foreground: oklch(0.97 0.01 240);
@@ -83,7 +83,9 @@
   * {
     border-color: var(--color-border);
   }
-  html, body, #root {
+  html,
+  body,
+  #root {
     height: 100%;
   }
   body {
@@ -91,8 +93,16 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     background-image:
-      radial-gradient(ellipse 80% 50% at 20% 0%, color-mix(in oklab, var(--neon-cyan) 10%, transparent), transparent 60%),
-      radial-gradient(ellipse 60% 50% at 100% 100%, color-mix(in oklab, var(--neon-pink) 10%, transparent), transparent 60%);
+      radial-gradient(
+        ellipse 80% 50% at 20% 0%,
+        color-mix(in oklab, var(--neon-cyan) 10%, transparent),
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse 60% 50% at 100% 100%,
+        color-mix(in oklab, var(--neon-pink) 10%, transparent),
+        transparent 60%
+      );
     background-attachment: fixed;
   }
 }
@@ -103,13 +113,27 @@
     backdrop-filter: blur(14px);
     border: 1px solid var(--border);
   }
-  .font-display { font-family: var(--font-display); }
-  .font-mono { font-family: var(--font-mono); }
-  .text-glow-cyan { text-shadow: 0 0 12px color-mix(in oklab, var(--neon-cyan) 70%, transparent); }
-  .text-glow-green { text-shadow: 0 0 12px color-mix(in oklab, var(--neon-green) 70%, transparent); }
-  .ring-glow-cyan { box-shadow: var(--shadow-glow-cyan); }
-  .ring-glow-green { box-shadow: var(--shadow-glow-green); }
-  .ring-glow-amber { box-shadow: var(--shadow-glow-amber); }
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+  .text-glow-cyan {
+    text-shadow: 0 0 12px color-mix(in oklab, var(--neon-cyan) 70%, transparent);
+  }
+  .text-glow-green {
+    text-shadow: 0 0 12px color-mix(in oklab, var(--neon-green) 70%, transparent);
+  }
+  .ring-glow-cyan {
+    box-shadow: var(--shadow-glow-cyan);
+  }
+  .ring-glow-green {
+    box-shadow: var(--shadow-glow-green);
+  }
+  .ring-glow-amber {
+    box-shadow: var(--shadow-glow-amber);
+  }
   .gradient-border {
     background:
       linear-gradient(var(--panel), var(--panel)) padding-box,
@@ -119,13 +143,21 @@
 }
 
 @keyframes grid-pan {
-  0% { background-position: 0 0; }
-  100% { background-position: 40px 40px; }
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40px 40px;
+  }
 }
 .bg-grid {
   background-image:
     linear-gradient(color-mix(in oklab, var(--neon-cyan) 8%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in oklab, var(--neon-cyan) 8%, transparent) 1px, transparent 1px);
+    linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--neon-cyan) 8%, transparent) 1px,
+      transparent 1px
+    );
   background-size: 40px 40px;
   animation: grid-pan 12s linear infinite;
 }

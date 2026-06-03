@@ -16,9 +16,7 @@ export function DPVisualizer({ step }: Props) {
   }
 
   const table = dp.table;
-  const highlighted = new Set(
-    (dp.highlighted ?? []).map((h) => `${h.row}-${h.col}`)
-  );
+  const highlighted = new Set((dp.highlighted ?? []).map((h) => `${h.row}-${h.col}`));
   const rows = table.length;
   const cols = table[0]?.length ?? 0;
 
@@ -74,12 +72,8 @@ export function DPVisualizer({ step }: Props) {
                         background: isHighlighted
                           ? "color-mix(in oklab, var(--neon-cyan) 25%, var(--panel))"
                           : "transparent",
-                        color: isHighlighted
-                          ? "var(--neon-cyan)"
-                          : "var(--foreground)",
-                        borderColor: isHighlighted
-                          ? "var(--neon-cyan)"
-                          : "var(--border)",
+                        color: isHighlighted ? "var(--neon-cyan)" : "var(--foreground)",
+                        borderColor: isHighlighted ? "var(--neon-cyan)" : "var(--border)",
                         boxShadow: isHighlighted
                           ? "inset 0 0 12px color-mix(in oklab, var(--neon-cyan) 40%, transparent), 0 0 16px color-mix(in oklab, var(--neon-cyan) 50%, transparent)"
                           : "none",

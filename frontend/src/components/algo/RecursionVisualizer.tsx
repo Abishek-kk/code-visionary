@@ -8,8 +8,10 @@ interface Props {
 export function RecursionVisualizer({ step }: Props) {
   if (!step.callStack || step.callStack.frames.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center 
-                      text-muted-foreground text-sm font-mono">
+      <div
+        className="flex h-full items-center justify-center 
+                      text-muted-foreground text-sm font-mono"
+      >
         No call stack data for this step
       </div>
     );
@@ -42,22 +44,15 @@ export function RecursionVisualizer({ step }: Props) {
                   idx === callStack.length - 1
                     ? "color-mix(in oklab, var(--neon-cyan) 12%, var(--panel))"
                     : "var(--panel)",
-                borderColor:
-                  idx === callStack.length - 1
-                    ? "var(--neon-cyan)"
-                    : "var(--border)",
+                borderColor: idx === callStack.length - 1 ? "var(--neon-cyan)" : "var(--border)",
                 boxShadow:
                   idx === callStack.length - 1
                     ? "0 0 16px color-mix(in oklab, var(--neon-cyan) 40%, transparent)"
                     : "none",
               }}
             >
-              <p className="font-mono font-bold text-[var(--neon-cyan)]">
-                {frame.fnName}
-              </p>
-              <p className="mt-1 font-mono text-xs text-muted-foreground">
-                args: {frame.args}
-              </p>
+              <p className="font-mono font-bold text-[var(--neon-cyan)]">{frame.fnName}</p>
+              <p className="mt-1 font-mono text-xs text-muted-foreground">args: {frame.args}</p>
               {frame.returnVal !== undefined && (
                 <motion.p
                   initial={{ opacity: 0 }}

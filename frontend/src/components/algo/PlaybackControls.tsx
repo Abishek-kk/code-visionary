@@ -96,10 +96,22 @@ export function PlaybackControls() {
   return (
     <div className="glass flex flex-col gap-3 rounded-2xl px-4 py-3">
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" disabled={disabled} onClick={restart} aria-label="Restart">
+        <Button
+          variant="ghost"
+          size="icon"
+          disabled={disabled}
+          onClick={restart}
+          aria-label="Restart"
+        >
           <RotateCcw className="size-4" />
         </Button>
-        <Button variant="ghost" size="icon" disabled={disabled || stepIndex === 0} onClick={prev} aria-label="Previous">
+        <Button
+          variant="ghost"
+          size="icon"
+          disabled={disabled || stepIndex === 0}
+          onClick={prev}
+          aria-label="Previous"
+        >
           <SkipBack className="size-4" />
         </Button>
         <Button
@@ -111,13 +123,23 @@ export function PlaybackControls() {
         >
           {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
         </Button>
-        <Button variant="ghost" size="icon" disabled={disabled || isEnd} onClick={next} aria-label="Next">
+        <Button
+          variant="ghost"
+          size="icon"
+          disabled={disabled || isEnd}
+          onClick={next}
+          aria-label="Next"
+        >
           <SkipForward className="size-4" />
         </Button>
 
         <div className="ml-2 relative flex items-center gap-2 font-mono text-xs">
           <span className="text-muted-foreground">
-            Step <span className="text-[var(--neon-cyan)]">{Math.min(stepIndex + 1, Math.max(total, 1))}</span> of {Math.max(total, 1)}
+            Step{" "}
+            <span className="text-[var(--neon-cyan)]">
+              {Math.min(stepIndex + 1, Math.max(total, 1))}
+            </span>{" "}
+            of {Math.max(total, 1)}
           </span>
           <AnimatePresence>
             {showCompletion && (
@@ -136,9 +158,7 @@ export function PlaybackControls() {
         </div>
 
         <div className="ml-auto flex items-center gap-3">
-          <span className="font-mono text-[10px] text-muted-foreground">
-            Speed
-          </span>
+          <span className="font-mono text-[10px] text-muted-foreground">Speed</span>
           <Slider
             value={[speed]}
             min={0.5}

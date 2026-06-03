@@ -92,10 +92,7 @@ export function BinarySearchVisualizer({ step }: Props) {
           {/* Index labels */}
           <div className="flex gap-3">
             {array.map((_, i) => (
-              <div
-                key={i}
-                className="w-16 text-center font-mono text-xs text-muted-foreground"
-              >
+              <div key={i} className="w-16 text-center font-mono text-xs text-muted-foreground">
                 {i}
               </div>
             ))}

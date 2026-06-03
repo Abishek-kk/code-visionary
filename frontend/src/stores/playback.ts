@@ -68,6 +68,6 @@ export const usePlayback = create<PlaybackState>()(
         code: state.code,
         speed: state.speed,
       }),
-    }
-  )
+    },
+  ),
 );

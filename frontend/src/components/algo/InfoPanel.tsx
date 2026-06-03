@@ -148,9 +148,7 @@ export function InfoPanel() {
         <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-[var(--neon-pink)]">
           <Lightbulb className="size-3" /> Key Insight
         </div>
-        <p className="mt-2 text-sm leading-relaxed text-foreground/90">
-          {analysis.insight}
-        </p>
+        <p className="mt-2 text-sm leading-relaxed text-foreground/90">{analysis.insight}</p>
       </div>
     </div>
   );

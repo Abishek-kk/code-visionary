@@ -60,7 +60,9 @@ export function Visualizer() {
         <div className="relative">
           <div className="font-display text-2xl tracking-tight">Ready to visualize</div>
           <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-            Paste your LeetCode solution on the left and hit <span className="font-mono text-[var(--neon-cyan)]">Analyze</span> to watch the algorithm come alive.
+            Paste your LeetCode solution on the left and hit{" "}
+            <span className="font-mono text-[var(--neon-cyan)]">Analyze</span> to watch the
+            algorithm come alive.
           </p>
         </div>
       </div>

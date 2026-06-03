@@ -39,9 +39,7 @@ Return ONLY a JSON object matching this schema via the provided tool. No prose.`
 export const analyzeCode = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => InputSchema.parse(data))
   .handler(async ({ data }): Promise<AnalysisResult> => {
-    const apiBase =
-      process.env.VITE_API_BASE_URL ||
-      "http://localhost:5000";
+    const apiBase = process.env.VITE_API_BASE_URL || "http://localhost:5000";
 
     const res = await fetch(`${apiBase}/api/analyze`, {
       method: "POST",
@@ -54,13 +52,8 @@ export const analyzeCode = createServerFn({ method: "POST" })
 
     if (!res.ok) {
       const text = await res.text();
-      if (res.status === 429)
-        throw new Error(
-          "Rate limit exceeded. Please wait and try again."
-        );
-      throw new Error(
-        `Analysis failed (${res.status}): ${text.slice(0, 200)}`
-      );
+      if (res.status === 429) throw new Error("Rate limit exceeded. Please wait and try again.");
+      throw new Error(`Analysis failed (${res.status}): ${text.slice(0, 200)}`);
     }
 
     const json = await res.json();

@@ -54,7 +54,7 @@ export function CodeWorkspace() {
       (state) => state.code,
       () => {
         setHydrated(true);
-      }
+      },
     );
     return unsubscribe;
   }, []);
@@ -67,8 +67,7 @@ export function CodeWorkspace() {
   }, [hydrated, code, language, setCode]);
 
   const analyzeMut = useMutation({
-    mutationFn: (vars: { code: string; language: LanguageId }) =>
-      analyzeFn({ data: vars }),
+    mutationFn: (vars: { code: string; language: LanguageId }) => analyzeFn({ data: vars }),
     onSuccess: (data) => {
       setAnalysis(data);
       toast.success(`Detected pattern: ${data.pattern}`);
@@ -128,10 +127,12 @@ export function CodeWorkspace() {
           <Button
             onClick={() => {
               if (!code || code.trim().length < 10) {
-                toast.error("Please paste a valid code solution (at least 10 characters) before analyzing.");
+                toast.error(
+                  "Please paste a valid code solution (at least 10 characters) before analyzing.",
+                );
                 return;
               }
-              if (code.trim().split('\n').length < 2) {
+              if (code.trim().split("\n").length < 2) {
                 toast.error("Your code seems too short. Paste a complete LeetCode solution.");
                 return;
               }
@@ -184,8 +185,7 @@ export function CodeWorkspace() {
             value={code}
             onChange={(v) => setCode(v ?? "")}
             options={{
-              fontFamily:
-                'JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, monospace',
+              fontFamily: "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, monospace",
               fontSize: 13,
               minimap: { enabled: false },
               scrollBeyondLastLine: false,

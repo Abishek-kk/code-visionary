@@ -118,9 +118,7 @@ function Home() {
                   onClick={() => setActiveTab(tab.id)}
                   className="flex flex-col items-center gap-1 rounded-lg px-4 py-2 transition-all"
                   style={{
-                    color: isActive
-                      ? "var(--neon-cyan)"
-                      : "var(--muted-foreground)",
+                    color: isActive ? "var(--neon-cyan)" : "var(--muted-foreground)",
                     background: isActive
                       ? "color-mix(in oklab, var(--neon-cyan) 12%, var(--panel))"
                       : "transparent",

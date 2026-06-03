@@ -8,8 +8,10 @@ interface Props {
 export function BacktrackVisualizer({ step }: Props) {
   if (!step.tree || !step.tree.nodes) {
     return (
-      <div className="flex h-full items-center justify-center 
-                      text-muted-foreground text-sm font-mono">
+      <div
+        className="flex h-full items-center justify-center 
+                      text-muted-foreground text-sm font-mono"
+      >
         No backtrack data for this step
       </div>
     );
@@ -55,9 +57,7 @@ export function BacktrackVisualizer({ step }: Props) {
                   <p className="font-mono text-xs font-bold text-[var(--neon-pink)]">
                     {frame.fnName}
                   </p>
-                  <p className="mt-1 font-mono text-[10px] text-muted-foreground">
-                    {frame.args}
-                  </p>
+                  <p className="mt-1 font-mono text-[10px] text-muted-foreground">{frame.args}</p>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -94,14 +94,8 @@ export function BacktrackVisualizer({ step }: Props) {
                         background: isHi
                           ? "color-mix(in oklab, var(--neon-amber) 25%, var(--panel))"
                           : "var(--panel)",
-                        border: `1px solid ${
-                          isHi
-                            ? "var(--neon-amber)"
-                            : "var(--border)"
-                        }`,
-                        color: isHi
-                          ? "var(--neon-amber)"
-                          : "var(--foreground)",
+                        border: `1px solid ${isHi ? "var(--neon-amber)" : "var(--border)"}`,
+                        color: isHi ? "var(--neon-amber)" : "var(--foreground)",
                         boxShadow: isHi
                           ? "0 0 12px color-mix(in oklab, var(--neon-amber) 50%, transparent)"
                           : "none",
