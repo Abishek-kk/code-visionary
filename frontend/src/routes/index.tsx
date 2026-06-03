@@ -7,6 +7,8 @@ import { PlaybackControls } from "@/components/algo/PlaybackControls";
 import { InfoPanel } from "@/components/algo/InfoPanel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePlayback } from "@/stores/playback";
+import { useServerFn } from "@tanstack/react-start";
+import { fetchLeetCodeProblem } from "@/lib/leetcode.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,6 +38,13 @@ function Home() {
   const [activeTab, setActiveTab] = useState<Tab>("editor");
   const [prevAnalysis, setPrevAnalysis] = useState(analysis);
 
+  const setLanguage = usePlayback((s) => s.setLanguage);
+  const setProblem = usePlayback((s) => s.setProblem);
+  const setIsFetchingProblem = usePlayback(
+    (s) => s.setIsFetchingProblem
+  );
+  const fetchFn = useServerFn(fetchLeetCodeProblem);
+
   // Auto-switch to visualizer when analysis completes on mobile
   useEffect(() => {
     if (isMobile && !prevAnalysis && analysis) {
@@ -43,6 +52,30 @@ function Home() {
     }
     setPrevAnalysis(analysis);
   }, [analysis, prevAnalysis, isMobile]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const problemSlug = params.get("problem");
+    const lang = params.get("lang");
+
+    if (lang) {
+      setLanguage(lang);
+    }
+
+    if (problemSlug) {
+      setIsFetchingProblem(true);
+      fetchFn({ data: { slug: problemSlug } })
+        .then((data) => {
+          setProblem(data);
+        })
+        .catch((err) => {
+          console.error("Failed to auto-load problem:", err);
+        })
+        .finally(() => {
+          setIsFetchingProblem(false);
+        });
+    }
+  }, []);
 
   const tabs: Array<{
     id: Tab;
