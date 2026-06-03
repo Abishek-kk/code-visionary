@@ -35,7 +35,7 @@ type Tab = "editor" | "visualizer" | "info";
 
 function Home() {
   const isMobile = useIsMobile();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, mounted } = useTheme();
   const analysis = usePlayback((s) => s.analysis);
   const [activeTab, setActiveTab] = useState<Tab>("editor");
   const [prevAnalysis, setPrevAnalysis] = useState(analysis);
@@ -105,14 +105,18 @@ function Home() {
             AI-powered LeetCode algorithm visualizer
           </p>
         </div>
-        <button
-          onClick={toggleTheme}
-          className="ml-auto flex items-center justify-center size-8 rounded-full border border-border bg-[var(--panel)] text-muted-foreground hover:text-foreground hover:border-[var(--neon-cyan)] transition-colors"
-          aria-label="Toggle theme"
-          title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-        >
-          {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
-        </button>
+        {mounted ? (
+          <button
+            onClick={toggleTheme}
+            className="ml-auto flex items-center justify-center size-8 rounded-full border border-border bg-[var(--panel)] text-muted-foreground hover:text-foreground hover:border-[var(--neon-cyan)] transition-colors"
+            aria-label="Toggle theme"
+            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+          </button>
+        ) : (
+          <div className="ml-auto size-8" />
+        )}
         <div className="flex items-center gap-2 rounded-full border border-border bg-[var(--panel)]/50 px-3 py-1 text-[11px] text-muted-foreground">
           <Sparkles className="size-3 text-[var(--neon-cyan)]" />
           <span className="font-mono">space</span> play

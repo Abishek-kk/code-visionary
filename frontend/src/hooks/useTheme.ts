@@ -4,8 +4,10 @@ type Theme = "dark" | "light";
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>("dark");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem(
         "algovision-theme"
@@ -30,5 +32,5 @@ export function useTheme() {
     }
   }
 
-  return { theme, toggleTheme };
+  return { theme, toggleTheme, mounted };
 }
