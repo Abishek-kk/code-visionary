@@ -77,6 +77,9 @@
   --neon-pink: oklch(0.78 0.22 340);
 
   --radius: 0.75rem;
+
+  --bg-glow-cyan: color-mix(in oklab, var(--neon-cyan) 10%, transparent);
+  --bg-glow-pink: color-mix(in oklab, var(--neon-pink) 10%, transparent);
 }
 
 [data-theme="light"] {
@@ -97,6 +100,8 @@
   --neon-green: oklch(0.50 0.22 150);
   --neon-amber: oklch(0.55 0.17 80);
   --neon-pink: oklch(0.55 0.22 340);
+  --bg-glow-cyan: oklch(0.92 0.04 220);
+  --bg-glow-pink: oklch(0.92 0.04 340);
 }
 
 @layer base {
@@ -115,12 +120,12 @@
     background-image:
       radial-gradient(
         ellipse 80% 50% at 20% 0%,
-        color-mix(in oklab, var(--neon-cyan) 10%, transparent),
+        var(--bg-glow-cyan),
         transparent 60%
       ),
       radial-gradient(
         ellipse 60% 50% at 100% 100%,
-        color-mix(in oklab, var(--neon-pink) 10%, transparent),
+        var(--bg-glow-pink),
         transparent 60%
       );
     background-attachment: fixed;
