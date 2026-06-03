@@ -5,12 +5,27 @@ exports.detectPattern = async (code, language) => {
     throw new Error('GROQ_API_KEY not configured in environment');
   }
 
-  const systemPrompt = `You are an expert DSA pattern detector. Given code, detect the pattern and return structured JSON with:
-- pattern: name of the detected pattern (e.g., "Two Pointers", "Sliding Window", "Binary Search", "Stack", "Hash Map", "BFS", "DFS", "Dynamic Programming", "Recursion", "Linked List", "Heap", "Backtracking")
-- visualizerType: one of ["array", "twoPointer", "slidingWindow", "stack", "binarySearch", "bfs", "dfs", "recursion", "dp", "linkedList", "heap", "backtrack"]
-- complexity: { time: string, space: string }
-- insight: brief explanation of how the algorithm works
-- steps: array of 6-18 step objects showing execution state
+  const systemPrompt = `You are an expert DSA algorithm visualizer. Given code, return a JSON object with:
+- pattern: detected pattern name
+- visualizerType: one of the supported types
+- complexity: { time, space }
+- insight: brief explanation
+- steps: array of 6-18 step objects
+
+Each step must include:
+- action: 2-5 word label
+- explanation: one sentence under 120 chars
+- array: current array state if applicable
+- pointers: [{name, index, color}] if applicable
+- window: {start, end} for sliding window
+- stack: array for stack algorithms
+- graph: {nodes, edges, visited, queue, current} for BFS/DFS
+- tree: {nodes, current, visited} for tree/heap
+- dp: {table, highlighted, rowLabels, colLabels} for DP
+- linkedList: {nodes, pointers} for linked list
+- callStack: {frames} for recursion/backtrack
+- highlights: array of indices
+- result: final result on last step only
 
 Return ONLY valid JSON. No prose or markdown.`;
 

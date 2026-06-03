@@ -1,30 +1,34 @@
-const { generateDryRun } = require('../services/dryRunGenerator');
 const { detectPattern } = require('../services/claudeService');
 
 exports.analyze = async (req, res, next) => {
   try {
     const { code, language } = req.body;
 
-    if (!code || typeof code !== 'string' || code.trim().length === 0) {
-      return res.status(400).json({ error: 'Code is required and must be a non-empty string' });
+    if (
+      !code ||
+      typeof code !== 'string' ||
+      code.trim().length === 0
+    ) {
+      return res.status(400).json({
+        error: 'Code is required',
+      });
     }
 
     if (!language || typeof language !== 'string') {
-      return res.status(400).json({ error: 'Language is required (e.g., python, javascript, java)' });
+      return res.status(400).json({
+        error: 'Language is required',
+      });
     }
 
-    // Detect the pattern
-    const patternData = await detectPattern(code, language);
-
-    // Generate dry run with pattern info
-    const steps = await generateDryRun(code, language, patternData.pattern);
+    // Single Groq call returns pattern AND steps
+    const result = await detectPattern(code, language);
 
     res.json({
-      pattern: patternData.pattern,
-      visualizerType: patternData.visualizerType,
-      complexity: patternData.complexity,
-      insight: patternData.insight,
-      steps,
+      pattern: result.pattern,
+      visualizerType: result.visualizerType,
+      complexity: result.complexity,
+      insight: result.insight,
+      steps: result.steps,
     });
   } catch (err) {
     next(err);
