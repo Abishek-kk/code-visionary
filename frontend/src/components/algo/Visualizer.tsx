@@ -10,6 +10,7 @@ import { DPVisualizer } from "./DPVisualizer";
 import { LinkedListVisualizer } from "./LinkedListVisualizer";
 import { HeapVisualizer } from "./HeapVisualizer";
 import { BacktrackVisualizer } from "./BacktrackVisualizer";
+import { VisualizerErrorBoundary } from "./VisualizerErrorBoundary";
 
 export function Visualizer() {
   const analysis = usePlayback((s) => s.analysis);
@@ -114,7 +115,12 @@ export function Visualizer() {
           transition={{ duration: 0.25 }}
           className="relative flex h-full w-full"
         >
-          {renderVisualizer()}
+          <VisualizerErrorBoundary
+            pattern={analysis.pattern}
+            key={`${visualizerType}-${stepIndex}`}
+          >
+            {renderVisualizer()}
+          </VisualizerErrorBoundary>
         </motion.div>
       </AnimatePresence>
     </div>
