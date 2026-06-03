@@ -13,6 +13,7 @@ interface PlaybackState {
   language: string;
   code: string;
   testCase: string;
+  voiceEnabled: boolean;
   setAnalysis: (a: AnalysisResult | null) => void;
   setProblem: (p: LeetCodeProblem | null) => void;
   setStep: (i: number) => void;
@@ -26,6 +27,7 @@ interface PlaybackState {
   setLanguage: (l: string) => void;
   setCode: (c: string) => void;
   setTestCase: (t: string) => void;
+  setVoiceEnabled: (b: boolean) => void;
   restart: () => void;
 }
 
@@ -42,6 +44,7 @@ export const usePlayback = create<PlaybackState>()(
       language: "python",
       code: "",
       testCase: "",
+      voiceEnabled: false,
       setAnalysis: (a) => set({ analysis: a, stepIndex: 0, playing: false, isAnalyzing: false }),
       setProblem: (p) => set({ problem: p }),
       setStep: (i) => {
@@ -63,6 +66,7 @@ export const usePlayback = create<PlaybackState>()(
       setLanguage: (l) => set({ language: l }),
       setCode: (c) => set({ code: c }),
       setTestCase: (t) => set({ testCase: t }),
+      setVoiceEnabled: (b) => set({ voiceEnabled: b }),
       restart: () => set({ stepIndex: 0, playing: false }),
     }),
     {
@@ -71,6 +75,7 @@ export const usePlayback = create<PlaybackState>()(
         language: state.language,
         code: state.code,
         testCase: state.testCase,
+        voiceEnabled: state.voiceEnabled,
         speed: state.speed,
       }),
     },

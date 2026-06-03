@@ -1,8 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play, SkipBack, SkipForward, RotateCcw, CheckCircle } from "lucide-react";
+import {
+  Pause,
+  Play,
+  SkipBack,
+  SkipForward,
+  RotateCcw,
+  CheckCircle,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import confetti from "canvas-confetti";
 import { usePlayback } from "@/stores/playback";
+import { useVoiceNarration } from "@/hooks/useVoiceNarration";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 
@@ -21,7 +31,12 @@ export function PlaybackControls() {
     setSpeed,
     restart,
     setStep,
+    voiceEnabled,
+    setVoiceEnabled,
   } = usePlayback();
+
+  const currentExplanation = analysis?.steps[stepIndex]?.explanation;
+  useVoiceNarration(currentExplanation, voiceEnabled && playing);
 
   const total = analysis?.steps.length ?? 0;
   const isEnd = stepIndex >= total - 1;
@@ -131,6 +146,19 @@ export function PlaybackControls() {
           aria-label="Next"
         >
           <SkipForward className="size-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setVoiceEnabled(!voiceEnabled)}
+          aria-label="Toggle voice"
+          title={voiceEnabled ? "Mute narration" : "Enable narration"}
+        >
+          {voiceEnabled ? (
+            <Volume2 className="size-4 text-[var(--neon-cyan)]" />
+          ) : (
+            <VolumeX className="size-4" />
+          )}
         </Button>
 
         <div className="ml-2 relative flex items-center gap-2 font-mono text-xs">
