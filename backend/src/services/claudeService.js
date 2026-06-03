@@ -1,4 +1,5 @@
 const { GROQ_API_KEY: apiKey } = require('../config/env');
+const { extractJSON } = require('../utils/jsonExtractor');
 
 exports.detectPattern = async (code, language) => {
   if (!apiKey) {
@@ -67,7 +68,7 @@ Return ONLY valid JSON. No prose or markdown.`;
       throw new Error('No content returned from Groq API');
     }
 
-    const result = JSON.parse(content);
+    const result = extractJSON(content);
     return {
       pattern: result.pattern || 'Unknown',
       visualizerType: result.visualizerType || 'array',
@@ -82,3 +83,4 @@ Return ONLY valid JSON. No prose or markdown.`;
     throw error;
   }
 };
+

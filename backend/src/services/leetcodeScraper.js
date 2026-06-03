@@ -1,4 +1,5 @@
 const { GROQ_API_KEY: apiKey } = require('../config/env');
+const { extractJSON } = require('../utils/jsonExtractor');
 
 exports.scrapeProblem = async (slug) => {
   if (!apiKey) {
@@ -54,7 +55,7 @@ Return ONLY valid JSON. No prose or markdown.`;
       throw new Error('No content returned from Groq API');
     }
 
-    const problem = JSON.parse(content);
+    const problem = extractJSON(content);
     return {
       slug,
       title: problem.title || 'Unknown Problem',
@@ -71,3 +72,4 @@ Return ONLY valid JSON. No prose or markdown.`;
     throw error;
   }
 };
+

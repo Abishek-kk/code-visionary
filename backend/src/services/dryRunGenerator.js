@@ -1,4 +1,5 @@
 const { GROQ_API_KEY: apiKey } = require('../config/env');
+const { extractJSON } = require('../utils/jsonExtractor');
 
 exports.generateDryRun = async (code, language, pattern) => {
   if (!apiKey) {
@@ -109,7 +110,7 @@ exports.generateDryRun = async (code, language, pattern) => {
       throw new Error('No content returned from Groq API');
     }
 
-    const steps = JSON.parse(content);
+    const steps = extractJSON(content);
     if (!Array.isArray(steps)) {
       throw new Error('Groq response is not an array of steps');
     }
@@ -122,3 +123,4 @@ exports.generateDryRun = async (code, language, pattern) => {
     throw error;
   }
 };
+
