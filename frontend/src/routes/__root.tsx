@@ -108,6 +108,16 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const stored = localStorage.getItem('algovision-theme') || 'dark';
+                document.documentElement.setAttribute('data-theme', stored);
+              } catch (e) {}
+            `,
+          }}
+        />
       </head>
       <body>
         {children}

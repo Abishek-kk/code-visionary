@@ -6,24 +6,28 @@ export function useTheme() {
   const [theme, setTheme] = useState<Theme>("dark");
 
   useEffect(() => {
-    const stored = localStorage.getItem(
-      "algovision-theme"
-    ) as Theme | null;
-    if (stored) {
-      setTheme(stored);
-      document.documentElement.setAttribute(
-        "data-theme", stored
-      );
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem(
+        "algovision-theme"
+      ) as Theme | null;
+      if (stored) {
+        setTheme(stored);
+        document.documentElement.setAttribute(
+          "data-theme", stored
+        );
+      }
     }
   }, []);
 
   function toggleTheme() {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
-    localStorage.setItem("algovision-theme", next);
-    document.documentElement.setAttribute(
-      "data-theme", next
-    );
+    if (typeof window !== "undefined") {
+      localStorage.setItem("algovision-theme", next);
+      document.documentElement.setAttribute(
+        "data-theme", next
+      );
+    }
   }
 
   return { theme, toggleTheme };
