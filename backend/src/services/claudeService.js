@@ -8,11 +8,11 @@ exports.detectPattern = async (code, language, testCase) => {
 
   const systemPrompt = `You are an expert DSA algorithm visualizer. Given code, return a JSON object with:
 - pattern: detected pattern name
-- visualizerType: one of the supported types
+- visualizerType: "array" | "twoPointer" | "slidingWindow" | "stack" | "binarySearch" | "bfs" | "dfs" | "recursion" | "dp" | "linkedList" | "heap" | "backtrack"
 - complexity: { time, space }
 - insight: brief explanation
 - steps: array of 6-18 step objects
-If a Test Case is provided by the user, use EXACTLY that input for the dry run. Otherwise pick a small representative example of size 5-9.
+IMPORTANT: If the user provides a Test Case in their message, you MUST use EXACTLY that input for the dry-run simulation. Do NOT substitute your own example when a test case is provided. Only pick your own small representative example (size 5-9) when no test case is given.
 
 Each step must include:
 - action: 2-5 word label
