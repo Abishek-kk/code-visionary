@@ -3,6 +3,6 @@ const { fetchProblem } = require('../controllers/leetcodeController');
 
 const router = express.Router();
 
-router.get('/problem/:id', fetchProblem);
+router.get('/problem/:slug', fetchProblem);
 
 module.exports = router;
