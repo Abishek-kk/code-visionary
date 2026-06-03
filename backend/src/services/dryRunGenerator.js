@@ -5,19 +5,71 @@ exports.generateDryRun = async (code, language, pattern) => {
     throw new Error('GROQ_API_KEY not configured in environment');
   }
 
-  const systemPrompt = `You are an expert algorithm visualizer. Given code and its pattern, generate a step-by-step dry run.
-For each step, return a JSON object with:
-- action: 2-5 word description (e.g., "Move left pointer")
-- explanation: one sentence <= 120 chars describing what happened
-- array: current array state (if applicable)
-- pointers: [{name, index, color}] for pointer-based algorithms
-- window: {start, end} for sliding window
-- stack: array for stack-based algorithms
-- highlights: array of indices to highlight
-- result: final result (on last step)
-- lineNumber: line of code being executed
+  const systemPrompt = 
+    `You are an expert algorithm visualizer. 
+     Given code and its detected pattern, generate 
+     6-18 step-by-step dry run steps as a JSON array.
 
-Generate 6-18 steps. Return ONLY a JSON array. No prose.`;
+     Each step object must include:
+     - action: string, 2-5 words 
+       (e.g. "Move left pointer")
+     - explanation: string, one sentence <= 120 chars
+     - highlights: array of indices to highlight
+
+     Include these fields based on the pattern:
+
+     For array/twoPointer/slidingWindow/binarySearch:
+     - array: current array state as number[]
+     - pointers: [{name, index, color}] where color 
+       is "cyan" | "green" | "amber" | "pink"
+     - window: {start, end} for sliding window only
+
+     For stack:
+     - stack: current stack as array (top = last item)
+     - array: input array if applicable
+
+     For bfs/dfs:
+     - graph: {
+         nodes: [{id, label}],
+         edges: [{from, to}],
+         visited: string[],
+         queue: string[] for BFS or stack: string[] 
+                for DFS,
+         current: string (current node id)
+       }
+
+     For tree/heap:
+     - tree: {
+         nodes: [{id, value, left?, right?}],
+         current: string (current node id),
+         visited: string[]
+       }
+
+     For dp:
+     - dp: {
+         table: 2D array of numbers/strings,
+         highlighted: [{row, col}],
+         rowLabels: string[],
+         colLabels: string[]
+       }
+
+     For linkedList:
+     - linkedList: {
+         nodes: [{id, value, next?}],
+         pointers: [{name, nodeId}]
+       }
+
+     For recursion/backtrack:
+     - callStack: {
+         frames: [{fnName, args, returnVal?}]
+       }
+     - array: candidate solution array if applicable
+
+     On the LAST step only, add:
+     - result: the final answer value
+
+     Return ONLY a valid JSON array. No prose. 
+     No markdown. No backticks.`;
 
   try {
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
