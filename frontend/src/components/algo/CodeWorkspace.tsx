@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
+import type { editor } from "monaco-editor";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Loader2, Play, Link2 } from "lucide-react";
@@ -36,12 +37,16 @@ export function CodeWorkspace() {
   const language = usePlayback((s) => s.language);
   const code = usePlayback((s) => s.code);
   const testCase = usePlayback((s) => s.testCase);
+  const stepIndex = usePlayback((s) => s.stepIndex);
+  const analysis = usePlayback((s) => s.analysis);
   const setLanguage = usePlayback((s) => s.setLanguage);
   const setCode = usePlayback((s) => s.setCode);
   const setTestCase = usePlayback((s) => s.setTestCase);
   const setAnalysis = usePlayback((s) => s.setAnalysis);
   const setProblem = usePlayback((s) => s.setProblem);
   const setIsAnalyzing = usePlayback((s) => s.setIsAnalyzing);
+
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   const analyzeFn = useServerFn(analyzeCode);
   const fetchFn = useServerFn(fetchLeetCodeProblem);
@@ -67,6 +72,28 @@ export function CodeWorkspace() {
       setCode(STARTER_CODE[language as LanguageId]);
     }
   }, [hydrated, code, language, setCode]);
+
+  useEffect(() => {
+    const editor = editorRef.current;
+    const step = analysis?.steps[stepIndex];
+    if (!editor || !step?.lineNumber) return;
+
+    editor.deltaDecorations(
+      [],
+      [
+        {
+          range: new (window as any).monaco.Range(step.lineNumber, 1, step.lineNumber, 1),
+          options: {
+            isWholeLine: true,
+            className: "monaco-executing-line",
+            glyphMarginClassName: "monaco-executing-glyph",
+          },
+        },
+      ],
+    );
+
+    editor.revealLineInCenter(step.lineNumber);
+  }, [stepIndex, analysis]);
 
   const analyzeMut = useMutation({
     mutationFn: (vars: { code: string; language: LanguageId; testCase?: string }) =>
@@ -198,6 +225,9 @@ export function CodeWorkspace() {
             language={monacoLangMap[language]}
             value={code}
             onChange={(v) => setCode(v ?? "")}
+            onMount={(editor) => {
+              editorRef.current = editor;
+            }}
             options={{
               fontFamily: "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, monospace",
               fontSize: 13,

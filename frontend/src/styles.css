@@ -161,3 +161,12 @@
   background-size: 40px 40px;
   animation: grid-pan 12s linear infinite;
 }
+
+.monaco-executing-line {
+  background: color-mix(in oklab, var(--neon-cyan) 15%, transparent) !important;
+  border-left: 3px solid var(--neon-cyan) !important;
+}
+
+.monaco-executing-glyph {
+  background-color: var(--neon-cyan) !important;
+}
