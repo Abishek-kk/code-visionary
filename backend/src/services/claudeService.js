@@ -1,8 +1,11 @@
-const { GROQ_API_KEY: apiKey } = require('../config/env');
+const Groq = require('groq-sdk');
+const { GROQ_API_KEY } = require('../config/env');
 const { extractJSON } = require('../utils/jsonExtractor');
 
+const groq = new Groq({ apiKey: GROQ_API_KEY });
+
 exports.detectPattern = async (code, language, testCase) => {
-  if (!apiKey) {
+  if (!GROQ_API_KEY) {
     throw new Error('GROQ_API_KEY not configured in environment');
   }
 
@@ -32,42 +35,22 @@ Each step must include:
 Return ONLY valid JSON. No prose or markdown.`;
 
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          {
-            role: 'user',
-            content: `Language: ${language}${testCase
-              ? `\nTest Case (USE EXACTLY THIS INPUT for the dry run):
-       ${testCase}`
-              : ''}\n\nCode:\n\`\`\`${language}\n${code}\n\`\`\``,
-          },
-        ],
-        temperature: 0.7,
-        max_tokens: 4000,
-      }),
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        {
+          role: 'user',
+          content: `Language: ${language}${testCase
+            ? `\nTest Case (USE EXACTLY THIS INPUT for the dry run):\n${testCase}`
+            : ''}\n\nCode:\n\`\`\`${language}\n${code}\n\`\`\``,
+        },
+      ],
+      temperature: 0.7,
+      max_tokens: 4000,
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      if (response.status === 429) {
-        throw new Error('Groq API rate limit exceeded');
-      }
-      if (response.status === 401) {
-        throw new Error('Invalid Groq API key');
-      }
-      throw new Error(`Groq API error (${response.status}): ${errorText.slice(0, 200)}`);
-    }
-
-    const json = await response.json();
-    const content = json.choices?.[0]?.message?.content;
+    const content = completion.choices[0]?.message?.content;
     if (!content) {
       throw new Error('No content returned from Groq API');
     }
@@ -81,8 +64,14 @@ Return ONLY valid JSON. No prose or markdown.`;
       steps: result.steps || [],
     };
   } catch (error) {
+    if (error?.status === 429) {
+      throw new Error('Groq API rate limit exceeded');
+    }
+    if (error?.status === 401) {
+      throw new Error('Invalid Groq API key');
+    }
     if (error instanceof SyntaxError) {
-      throw new Error(`Failed to parse Groq response as JSON: ${error.message}`);
+      throw new Error(`Failed to parse Groq response: ${error.message}`);
     }
     throw error;
   }

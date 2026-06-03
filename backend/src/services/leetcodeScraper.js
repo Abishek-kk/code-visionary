@@ -1,8 +1,11 @@
-const { GROQ_API_KEY: apiKey } = require('../config/env');
+const Groq = require('groq-sdk');
+const { GROQ_API_KEY } = require('../config/env');
 const { extractJSON } = require('../utils/jsonExtractor');
 
+const groq = new Groq({ apiKey: GROQ_API_KEY });
+
 exports.scrapeProblem = async (slug) => {
-  if (!apiKey) {
+  if (!GROQ_API_KEY) {
     throw new Error('GROQ_API_KEY not configured in environment');
   }
 
@@ -18,39 +21,20 @@ If you don't know the problem, return your best educated guess with isGuessed: t
 Return ONLY valid JSON. No prose or markdown.`;
 
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          {
-            role: 'user',
-            content: `Problem slug: ${slug}`,
-          },
-        ],
-        temperature: 0.5,
-        max_tokens: 1500,
-      }),
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        {
+          role: 'user',
+          content: `Problem slug: ${slug}`,
+        },
+      ],
+      temperature: 0.5,
+      max_tokens: 1500,
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      if (response.status === 429) {
-        throw new Error('Groq API rate limit exceeded');
-      }
-      if (response.status === 401) {
-        throw new Error('Invalid Groq API key');
-      }
-      throw new Error(`Groq API error (${response.status}): ${errorText.slice(0, 200)}`);
-    }
-
-    const json = await response.json();
-    const content = json.choices?.[0]?.message?.content;
+    const content = completion.choices[0]?.message?.content;
     if (!content) {
       throw new Error('No content returned from Groq API');
     }
@@ -66,6 +50,12 @@ Return ONLY valid JSON. No prose or markdown.`;
       isGuessed: problem.isGuessed ?? true,
     };
   } catch (error) {
+    if (error?.status === 429) {
+      throw new Error('Groq API rate limit exceeded');
+    }
+    if (error?.status === 401) {
+      throw new Error('Invalid Groq API key');
+    }
     if (error instanceof SyntaxError) {
       throw new Error(`Failed to parse Groq problem response: ${error.message}`);
     }
