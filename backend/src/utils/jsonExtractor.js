@@ -1,48 +1,48 @@
-exports.extractJSON = (text) => {
-  if (typeof text !== 'string') return null;
+exports.extractJSON = (content) => {
+  if (!content || typeof content !== 'string') {
+    throw new Error('No content to extract JSON from');
+  }
 
-  let cleanText = text.trim();
+  let cleaned = content.trim();
 
-  // Try direct parsing first
+  // Remove markdown code fences with or without language tag
+  // Handles: ```json ... ``` and ``` ... ```
+  const fenceMatch = cleaned.match(
+    /^```(?:json)?\s*([\s\S]*?)\s*```$/
+  );
+  if (fenceMatch && fenceMatch[1]) {
+    cleaned = fenceMatch[1].trim();
+  }
+
+  // Try direct parse first
   try {
-    return JSON.parse(cleanText);
-  } catch (e) {
-    // Try to extract from markdown code blocks
-    const codeBlockRegex = /```(?:json)?\s*([\s\S]*?)\s*```/i;
-    const match = cleanText.match(codeBlockRegex);
-    if (match && match[1]) {
-      try {
-        return JSON.parse(match[1].trim());
-      } catch (innerError) {
-        // Fall through to substring matching if code block content itself has issues
-      }
+    return JSON.parse(cleaned);
+  } catch (firstError) {
+    // Try to find JSON object or array in the string
+    const objectMatch = cleaned.match(/\{[\s\S]*\}/);
+    const arrayMatch = cleaned.match(/\[[\s\S]*\]/);
+
+    const candidate = objectMatch
+      ? objectMatch[0]
+      : arrayMatch
+        ? arrayMatch[0]
+        : null;
+
+    if (!candidate) {
+      throw new Error(
+        `Could not extract JSON from response. ` +
+        `First 200 chars: ${content.slice(0, 200)}`
+      );
     }
 
-    // Try to find the first '{' or '[' and last '}' or ']'
-    const firstBrace = cleanText.indexOf('{');
-    const firstBracket = cleanText.indexOf('[');
-
-    let startIdx = -1;
-    let endIdx = -1;
-
-    if (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) {
-      startIdx = firstBrace;
-      endIdx = cleanText.lastIndexOf('}');
-    } else if (firstBracket !== -1) {
-      startIdx = firstBracket;
-      endIdx = cleanText.lastIndexOf(']');
+    try {
+      return JSON.parse(candidate);
+    } catch (secondError) {
+      throw new Error(
+        `JSON parse failed after extraction. ` +
+        `Error: ${secondError.message}. ` +
+        `Content: ${candidate.slice(0, 200)}`
+      );
     }
-
-    if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
-      const jsonCandidate = cleanText.substring(startIdx, endIdx + 1);
-      try {
-        return JSON.parse(jsonCandidate);
-      } catch (innerError) {
-        // Fall through
-      }
-    }
-
-    throw e; // Throw original SyntaxError if everything fails
   }
 };
-
