@@ -67,9 +67,26 @@ export function InfoPanel() {
 
   if (!analysis) {
     return (
-      <div className="glass flex h-full flex-col items-center justify-center rounded-2xl p-6 text-center text-sm text-muted-foreground">
-        <Sparkles className="mb-3 size-6 text-[var(--neon-cyan)]" />
-        Analysis results will appear here.
+      <div className="glass flex h-full flex-col rounded-2xl p-4 gap-3">
+        {isFetchingProblem ? (
+          <>
+            <div className="glass rounded-2xl p-4">
+              <Skeleton className="h-4 w-24 mb-2" />
+              <Skeleton className="h-6 w-48 mb-2" />
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-5/6 mt-1" />
+            </div>
+            <div className="flex items-center justify-center flex-1 text-sm text-muted-foreground font-mono">
+              Loading problem...
+            </div>
+          </>
+        ) : (
+          <div className="flex h-full flex-col items-center justify-center text-center text-sm text-muted-foreground">
+            <Sparkles className="mb-3 size-6 text-[var(--neon-cyan)]" />
+            Analysis results will appear here.
+          </div>
+        )}
+        <HistoryPanel />
       </div>
     );
   }
