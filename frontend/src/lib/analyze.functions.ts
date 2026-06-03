@@ -9,7 +9,9 @@ const InputSchema = z.object({
 
 const SYSTEM = `You are an expert algorithm visualizer. Given a piece of code, you:
 1. Detect the DSA pattern (e.g. "Two Pointers", "Sliding Window", "Binary Search", "Stack", "Hash Map", "Simple Array Traversal").
-2. Choose ONE visualizerType from this exact set: "array" | "twoPointer" | "slidingWindow" | "stack".
+2. Choose ONE visualizerType from this exact set: "array" | "twoPointer" | "slidingWindow" | "stack" | 
+"binarySearch" | "bfs" | "dfs" | "recursion" | 
+"dp" | "linkedList" | "heap" | "backtrack".
 3. Produce a step-by-step dry-run as JSON, simulating execution on a SMALL representative input (size 5-9).
 4. Each step shows the data structure state AFTER that step.
 
