@@ -79,14 +79,20 @@ export function CodeWorkspace() {
     },
   });
 
+  const setIsFetchingProblem = usePlayback((s) => s.setIsFetchingProblem);
+
   const fetchMut = useMutation({
     mutationFn: (slug: string) => fetchFn({ data: { slug } }),
+    onMutate: () => setIsFetchingProblem(true),
     onSuccess: (data) => {
       setProblem(data);
+      setIsFetchingProblem(false);
       toast.success(`Loaded: ${data.title}`);
     },
-    onError: (err: Error) =>
-      toast.error(err.message || "Could not load problem."),
+    onError: (err: Error) => {
+      setIsFetchingProblem(false);
+      toast.error(err.message || "Could not load problem.");
+    },
   });
 
   function handleLanguageChange(id: LanguageId) {

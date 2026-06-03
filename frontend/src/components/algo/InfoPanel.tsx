@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 export function InfoPanel() {
   const analysis = usePlayback((s) => s.analysis);
   const isAnalyzing = usePlayback((s) => s.isAnalyzing);
+  const isFetchingProblem = usePlayback((s) => s.isFetchingProblem);
   const stepIndex = usePlayback((s) => s.stepIndex);
   const problem = usePlayback((s) => s.problem);
 
@@ -76,6 +77,14 @@ export function InfoPanel() {
 
   return (
     <div className="flex h-full flex-col gap-3 overflow-y-auto pr-1">
+      {isFetchingProblem && (
+        <div className="glass rounded-2xl p-4">
+          <Skeleton className="h-4 w-24 mb-2" />
+          <Skeleton className="h-6 w-48 mb-2" />
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-5/6 mt-1" />
+        </div>
+      )}
       {problem && (
         <div className="glass rounded-2xl p-4">
           <div className="flex items-center gap-2">

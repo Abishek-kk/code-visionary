@@ -9,6 +9,7 @@ interface PlaybackState {
   playing: boolean;
   speed: number; // multiplier
   isAnalyzing: boolean;
+  isFetchingProblem: boolean;
   language: string;
   code: string;
   setAnalysis: (a: AnalysisResult | null) => void;
@@ -20,6 +21,7 @@ interface PlaybackState {
   setPlaying: (b: boolean) => void;
   setSpeed: (s: number) => void;
   setIsAnalyzing: (b: boolean) => void;
+  setIsFetchingProblem: (b: boolean) => void;
   setLanguage: (l: string) => void;
   setCode: (c: string) => void;
   restart: () => void;
@@ -34,6 +36,7 @@ export const usePlayback = create<PlaybackState>()(
       playing: false,
       speed: 1,
       isAnalyzing: false,
+      isFetchingProblem: false,
       language: "python",
       code: "",
       setAnalysis: (a) => set({ analysis: a, stepIndex: 0, playing: false, isAnalyzing: false }),
@@ -53,6 +56,7 @@ export const usePlayback = create<PlaybackState>()(
       setPlaying: (b) => set({ playing: b }),
       setSpeed: (s) => set({ speed: s }),
       setIsAnalyzing: (b) => set({ isAnalyzing: b }),
+      setIsFetchingProblem: (b) => set({ isFetchingProblem: b }),
       setLanguage: (l) => set({ language: l }),
       setCode: (c) => set({ code: c }),
       restart: () => set({ stepIndex: 0, playing: false }),
