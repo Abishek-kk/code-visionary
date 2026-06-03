@@ -8,7 +8,7 @@ exports.detectPattern = async (code, language, testCase) => {
 
   const systemPrompt = `You are an expert DSA algorithm visualizer. Given code, return a JSON object with:
 - pattern: detected pattern name
-- visualizerType: "array" | "twoPointer" | "slidingWindow" | "stack" | "binarySearch" | "bfs" | "dfs" | "recursion" | "dp" | "linkedList" | "heap" | "backtrack"
+- visualizerType: "array" | "twoPointer" | "slidingWindow" | "stack" | "binarySearch" | "bfs" | "dfs" | "recursion" | "dp" | "linkedList" | "heap" | "backtrack" | "tree"
 - complexity: { time, space }
 - insight: brief explanation
 - steps: array of 6-18 step objects
