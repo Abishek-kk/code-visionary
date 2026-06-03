@@ -39,12 +39,14 @@ export function CodeWorkspace() {
   const testCase = usePlayback((s) => s.testCase);
   const stepIndex = usePlayback((s) => s.stepIndex);
   const analysis = usePlayback((s) => s.analysis);
+  const problem = usePlayback((s) => s.problem);
   const setLanguage = usePlayback((s) => s.setLanguage);
   const setCode = usePlayback((s) => s.setCode);
   const setTestCase = usePlayback((s) => s.setTestCase);
   const setAnalysis = usePlayback((s) => s.setAnalysis);
   const setProblem = usePlayback((s) => s.setProblem);
   const setIsAnalyzing = usePlayback((s) => s.setIsAnalyzing);
+  const addToHistory = usePlayback((s) => s.addToHistory);
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
