@@ -3,6 +3,7 @@ import { Sparkles, Clock, Database, Lightbulb } from "lucide-react";
 import { usePlayback } from "@/stores/playback";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { HistoryPanel } from "./HistoryPanel";
 
 export function InfoPanel() {
   const analysis = usePlayback((s) => s.analysis);
@@ -150,6 +151,8 @@ export function InfoPanel() {
         </div>
         <p className="mt-2 text-sm leading-relaxed text-foreground/90">{analysis.insight}</p>
       </div>
+
+      <HistoryPanel />
     </div>
   );
 }
