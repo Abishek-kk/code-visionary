@@ -1,6 +1,7 @@
 const Groq = require('groq-sdk');
 const { GROQ_API_KEY } = require('../config/env');
 const { extractJSON } = require('../utils/jsonExtractor');
+const systemPrompt = require('../prompts/dryRunGeneration');
 
 const groq = new Groq({ apiKey: GROQ_API_KEY });
 
@@ -8,31 +9,6 @@ exports.detectPattern = async (code, language, testCase) => {
   if (!GROQ_API_KEY) {
     throw new Error('GROQ_API_KEY not configured in environment');
   }
-
-  const systemPrompt = `You are an expert DSA algorithm visualizer. Given code, return a JSON object with:
-- pattern: detected pattern name
-- visualizerType: "array" | "twoPointer" | "slidingWindow" | "stack" | "binarySearch" | "bfs" | "dfs" | "recursion" | "dp" | "linkedList" | "heap" | "backtrack" | "tree"
-- complexity: { time, space }
-- insight: brief explanation
-- steps: array of 6-18 step objects
-IMPORTANT: If the user provides a Test Case in their message, you MUST use EXACTLY that input for the dry-run simulation. Do NOT substitute your own example when a test case is provided. Only pick your own small representative example (size 5-9) when no test case is given.
-
-Each step must include:
-- action: 2-5 word label
-- explanation: one sentence under 120 chars
-- array: current array state if applicable
-- pointers: [{name, index, color}] if applicable
-- window: {start, end} for sliding window
-- stack: array for stack algorithms
-- graph: {nodes, edges, visited, queue, current} for BFS/DFS
-- tree: {nodes, current, visited} for tree/heap
-- dp: {table, highlighted, rowLabels, colLabels} for DP
-- linkedList: {nodes, pointers} for linked list
-- callStack: {frames} for recursion/backtrack
-- highlights: array of indices
-- result: final result on last step only
-
-Return ONLY valid JSON. No prose or markdown.`;
 
   try {
     const completion = await groq.chat.completions.create({
